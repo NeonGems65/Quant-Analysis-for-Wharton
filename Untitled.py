@@ -1,6 +1,6 @@
 import pandas as pd
 import numpy as np
-import matplotlib as plt
+import matplotlib.pyplot as plt
 import datetime as dt
 from pandas_datareader import data as pdr
 import yfinance as yf
@@ -14,7 +14,7 @@ def get_data(stocks, start, end):
     covMatrix = returns.cov()
     return meanReturns, covMatrix
 
-stockList = ["NVDA", "AAPL", "AMZN"]
+stockList = ["NVDA", "AAPL"]
 stocks = ' '.join(stockList)
 endDate = dt.datetime.now()
 startDate = endDate - dt.timedelta(days=300)
@@ -44,6 +44,10 @@ for m in range(0, mc_sims):
     portfolio_sims[:,m] = np.cumprod(np.inner(weights,dailyReturns.T)+1)*initialPortfolio
 
 plt.plot(portfolio_sims)
+plt.ylabel("Portfolio Value ($)")
+plt.xlabel("Days")
+plt.title("MC simulation of a stock portfolio")
+plt.show()
 
 
 print(weights)
