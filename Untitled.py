@@ -1,3 +1,24 @@
+#!/usr/bin/env python
+try:
+    # For Python 3.0 and later
+    from urllib.request import urlopen
+except ImportError:
+    # Fall back to Python 2's urllib2
+    from urllib2 import urlopen
+
+import certifi
+import json
+
+def get_jsonparsed_data(url):
+    response = urlopen(url, cafile=certifi.where())
+    data = response.read().decode("utf-8")
+    return json.loads(data)
+
+urlAAPL = ("https://financialmodelingprep.com/api/v3/key-metrics/AAPL?period=annual&apikey=V6J4FVBPQvPyJAWmcPry9kb8pVlTgibE")
+urlNVDA = ("https://financialmodelingprep.com/api/v3/key-metrics/NVDA?period=annual&apikey=V6J4FVBPQvPyJAWmcPry9kb8pVlTgibE")
+urlArray = [get_jsonparsed_data(urlAAPL), get_jsonparsed_data(urlNVDA)]
+
+
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
