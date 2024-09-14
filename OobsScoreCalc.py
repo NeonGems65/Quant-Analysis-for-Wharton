@@ -1,6 +1,7 @@
 import math
 import random
 import numpy as np
+import csv
 metricNames =     ['P/E', 'EV/EBITDA', 'P/B', 'P/CF', 'P/S', 'ROE',  'ROA',             "ROD",'ROI',"Revenue", 'Profit', "Equity", "Assets"]
 baseMetricVals = [  0.54,  0.46,        0.63 , 0.56,   0.88,  150.00, 48.85,            1, 1, 1,      1,   1,      1, ]
 possibilityMatrices = []
@@ -21,64 +22,52 @@ eqi15yr = 0.6126
 ast15yr = 0.4885
 
 
-numPossibilities = 100
+numPossibilities = 1000
 for i in range(numPossibilities):
     total = 0.0
     while True:
         total = 0.0
-        initAmnt = 0.379999999999999999999999999
+        min = 0.0
+        max = 0.099999999999999999999999999
 
-        peMod = 0.0292
+        peMod = np.random.uniform(min, max)
         total += peMod
-        initAmnt -= peMod
 
-        evEbitdaMod = 0.0292
+        evEbitdaMod = np.random.uniform(min, max)
         total += evEbitdaMod
-        initAmnt -=  evEbitdaMod
 
-        pbMod = 0.0292
+        pbMod = np.random.uniform(min, max)
         total += pbMod
-        initAmnt -=  pbMod
 
-        pcfMod = 0.0292
+        pcfMod = np.random.uniform(min, max)
         total += pcfMod
-        initAmnt -= pcfMod
 
-        psMod = 0.0292
+        psMod = np.random.uniform(min, max)
         total += psMod
-        initAmnt -= psMod
         
-        roeMod = 0.0292
+        roeMod = np.random.uniform(min, max)
         total += roeMod
-        initAmnt -= roeMod
 
-        roaMod = 0.0292
+        roaMod = np.random.uniform(min, max)
         total += roaMod
-        initAmnt -= roaMod
         
-        rodMod = 0.0292
+        rodMod = np.random.uniform(min, max)
         total += rodMod
-        initAmnt -= rodMod
 
-        roiMod = 0.0292
+        roiMod = np.random.uniform(min, max)
         total += roiMod
-        initAmnt -= roiMod
 
-        revenueMod = 0.0292
+        revenueMod = np.random.uniform(min, max)
         total += revenueMod
-        initAmnt -= revenueMod
 
-        profitMod = 0.0292
+        profitMod = np.random.uniform(min, max)
         total += profitMod
-        initAmnt -=  profitMod
 
-        equityMod = 0.0292
+        equityMod = np.random.uniform(min, max)
         total += equityMod
-        initAmnt -= equityMod
 
-        assetsMod = 0.0292
+        assetsMod = np.random.uniform(min, max)
         total += assetsMod
-        initAmnt -= assetsMod
 
         print(total)
 
@@ -160,3 +149,9 @@ for i in range(numPossibilities):
 
     
 print(oScoreArr)
+
+with open('O-Scores.csv', 'w', newline="") as f:
+    csvWriter = csv.writer(f)
+    for score in oScoreArr:
+        csvWriter.writerow([score])    
+    print("DONe")
