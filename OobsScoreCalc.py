@@ -28,55 +28,55 @@ for i in range(numPossibilities):
         total = 0.0
         initAmnt = 0.379999999999999999999999999
 
-        peMod = np.random.uniform(0.0, initAmnt)
+        peMod = 0.0292
         total += peMod
         initAmnt -= peMod
 
-        evEbitdaMod = np.random.uniform(0.0, initAmnt)
+        evEbitdaMod = 0.0292
         total += evEbitdaMod
         initAmnt -=  evEbitdaMod
 
-        pbMod = np.random.uniform(0.0, initAmnt)
+        pbMod = 0.0292
         total += pbMod
         initAmnt -=  pbMod
 
-        pcfMod = np.random.uniform(0.0, initAmnt)
+        pcfMod = 0.0292
         total += pcfMod
         initAmnt -= pcfMod
 
-        psMod = np.random.uniform(0.0, initAmnt)
+        psMod = 0.0292
         total += psMod
         initAmnt -= psMod
         
-        roeMod = np.random.uniform(0.0, initAmnt)
+        roeMod = 0.0292
         total += roeMod
         initAmnt -= roeMod
 
-        roaMod = np.random.uniform(0.0, initAmnt)
+        roaMod = 0.0292
         total += roaMod
         initAmnt -= roaMod
         
-        rodMod = np.random.uniform(0.0, initAmnt)
+        rodMod = 0.0292
         total += rodMod
         initAmnt -= rodMod
 
-        roiMod = np.random.uniform(0.0, initAmnt)
+        roiMod = 0.0292
         total += roiMod
         initAmnt -= roiMod
 
-        revenueMod = np.random.uniform(0.0, initAmnt)
+        revenueMod = 0.0292
         total += revenueMod
         initAmnt -= revenueMod
 
-        profitMod = np.random.uniform(0.0, initAmnt)
+        profitMod = 0.0292
         total += profitMod
         initAmnt -=  profitMod
 
-        equityMod = np.random.uniform(0.0, initAmnt)
+        equityMod = 0.0292
         total += equityMod
         initAmnt -= equityMod
 
-        assetsMod = np.random.uniform(0.0, initAmnt)
+        assetsMod = 0.0292
         total += assetsMod
         initAmnt -= assetsMod
 
