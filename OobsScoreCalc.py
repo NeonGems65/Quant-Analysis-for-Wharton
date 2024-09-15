@@ -26,6 +26,21 @@ numPossibilities = 1000
 for i in range(numPossibilities):
     total = 0.0
     amnt = .38
+    
+    peMod = 0.000001
+    evEbitdaMod = 0.000001
+    pbMod = 0.000001
+    pcfMod = 0.000001
+    psMod = 0.000001
+    roeMod = 0.000001
+    roaMod = 0.000001
+    rodMod = 0.000001
+    roiMod = 0.000001
+    revenueMod = 0.000001
+    profitMod = 0.000001
+    equityMod = 0.000001
+    assetsMod = 0.000001
+    
     while True:
         
         min = 0.001
@@ -38,24 +53,73 @@ for i in range(numPossibilities):
             
         
         elif metricNames[index] == 'EV/EBITDA':
-            evEbtidaMod = random.uniform(min, amnt)
-            total += evEbtidaMod
-            amnt -= evEbtidaMod
+            evEbitdaMod = random.uniform(min, amnt)
+            total += evEbitdaMod
+            amnt -= evEbitdaMod
         
         elif metricNames[index] == 'P/B':
             pbMod = random.uniform(min, amnt)
             total += pbMod
             amnt -= pbMod
-        
-        
             
+        elif metricNames[index] == 'P/CF':
+            pcfMod = random.uniform(min, amnt)
+            total += pcfMod
+            amnt -= pcfMod
+        
+        elif metricNames[index] == 'P/S':
+            psMod = random.uniform(min, amnt)
+            total += psMod
+            amnt -= psMod
+            
+        elif metricNames[index] == 'ROE':
+            roeMod = random.uniform(min, amnt)
+            total += roeMod
+            amnt -= roeMod
+        
+        elif metricNames[index] == 'ROA':
+            roaMod = random.uniform(min, amnt)
+            total += roaMod
+            amnt -= roaMod
+        
+        elif metricNames[index] == 'ROD':
+            rodMod = random.uniform(min, amnt)
+            total += rodMod
+            amnt -= rodMod  
+            
+        elif metricNames[index] == 'ROI':
+            roiMod = random.uniform(min, amnt)
+            total += roiMod
+            amnt -= roiMod    
+            
+        elif metricNames[index] == 'Revenue':
+            revenueMod = random.uniform(min, amnt)
+            total += revenueMod
+            amnt -= revenueMod
+            
+        elif metricNames[index] == 'Profit':
+            profitMod = random.uniform(min, amnt)
+            total += profitMod
+            amnt -= profitMod
+            
+        elif metricNames[index] == 'Equity':
+            equityMod = random.uniform(min, amnt)
+            total += equityMod
+            amnt -= equityMod
+            
+        elif metricNames[index] == 'Assets':
+            assetsMod = random.uniform(min, amnt)
+            total += assetsMod
+            amnt -= assetsMod
 
                
         metricNames.pop(index)
         print(total)
 
         if 0.375 <= total <= .38:
+            metricNames =  ['P/E', 'EV/EBITDA', 'P/B', 'P/CF', 'P/S', 'ROE',  'ROA',             "ROD",'ROI',"Revenue", 'Profit', "Equity", "Assets"]
             break
+            
 
     possibilityMatrix = []
     for  i in range(len(baseMetricVals)):
