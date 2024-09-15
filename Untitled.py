@@ -30,6 +30,7 @@ import yfinance as yf
 def get_data(stocks, start, end):
     stockData = yf.download(stocks, start=start, end=end)
     stockData = stockData["Close"]
+    print(stockData)
     returns = stockData.pct_change()
     meanReturns = returns.mean()
     covMatrix = returns.cov()

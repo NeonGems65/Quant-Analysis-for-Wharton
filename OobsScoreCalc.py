@@ -25,53 +25,36 @@ ast15yr = 0.4885
 numPossibilities = 1000
 for i in range(numPossibilities):
     total = 0.0
+    amnt = .38
     while True:
-        total = 0.0
-        min = 0.0
-        max = 0.099999999999999999999999999
-
-        peMod = np.random.uniform(min, max)
-        total += peMod
-
-        evEbitdaMod = np.random.uniform(min, max)
-        total += evEbitdaMod
-
-        pbMod = np.random.uniform(min, max)
-        total += pbMod
-
-        pcfMod = np.random.uniform(min, max)
-        total += pcfMod
-
-        psMod = np.random.uniform(min, max)
-        total += psMod
         
-        roeMod = np.random.uniform(min, max)
-        total += roeMod
-
-        roaMod = np.random.uniform(min, max)
-        total += roaMod
+        min = 0.001
+        index = random.randint(0, len(metricNames) - 1) 
         
-        rodMod = np.random.uniform(min, max)
-        total += rodMod
+        if metricNames[index] == 'P/E':
+            peMod = random.uniform(min, amnt)
+            total += peMod
+            amnt -= peMod
+            
+        
+        elif metricNames[index] == 'EV/EBITDA':
+            evEbtidaMod = random.uniform(min, amnt)
+            total += evEbtidaMod
+            amnt -= evEbtidaMod
+        
+        elif metricNames[index] == 'P/B':
+            pbMod = random.uniform(min, amnt)
+            total += pbMod
+            amnt -= pbMod
+        
+        
+            
 
-        roiMod = np.random.uniform(min, max)
-        total += roiMod
-
-        revenueMod = np.random.uniform(min, max)
-        total += revenueMod
-
-        profitMod = np.random.uniform(min, max)
-        total += profitMod
-
-        equityMod = np.random.uniform(min, max)
-        total += equityMod
-
-        assetsMod = np.random.uniform(min, max)
-        total += assetsMod
-
+               
+        metricNames.pop(index)
         print(total)
 
-        if 0.374 < total < 0.38:
+        if 0.375 <= total <= .38:
             break
 
     possibilityMatrix = []
