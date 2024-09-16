@@ -22,8 +22,9 @@ eqi15yr = 0.6126
 ast15yr = 0.4885
 
 
-numPossibilities = 1000
+numPossibilities = 100
 for i in range(numPossibilities):
+    print(i)
     total = 0.0
     amnt = .38
     
@@ -44,7 +45,34 @@ for i in range(numPossibilities):
     while True:
         
         min = 0.001
-        index = random.randint(0, len(metricNames) - 1) 
+        # print(len(metricNames)-1)
+
+        # If there are metric names left in the list, randomly select one
+        if len(metricNames)-1 != -1:
+            index = random.randint(0, len(metricNames) - 1) 
+        # If there are NO metric names left in the list, re-initliaze all variables and re-assign them
+        else:
+            total = 0.0
+            amnt = .38
+            
+            peMod = 0.000001
+            evEbitdaMod = 0.000001
+            pbMod = 0.000001
+            pcfMod = 0.000001
+            psMod = 0.000001
+            roeMod = 0.000001
+            roaMod = 0.000001
+            rodMod = 0.000001
+            roiMod = 0.000001
+            revenueMod = 0.000001
+            profitMod = 0.000001
+            equityMod = 0.000001
+            assetsMod = 0.000001
+            metricNames =  ['P/E', 'EV/EBITDA', 'P/B', 'P/CF', 'P/S', 'ROE',  'ROA',             "ROD",'ROI',"Revenue", 'Profit', "Equity", "Assets"]
+            index = random.randint(0, len(metricNames) - 1) 
+
+
+
         
         if metricNames[index] == 'P/E':
             peMod = random.uniform(min, amnt)
@@ -112,9 +140,9 @@ for i in range(numPossibilities):
             total += assetsMod
             amnt -= assetsMod
 
-               
+        
         metricNames.pop(index)
-        print(total)
+        # print(total)
 
         if 0.375 <= total <= .38:
             metricNames =  ['P/E', 'EV/EBITDA', 'P/B', 'P/CF', 'P/S', 'ROE',  'ROA',             "ROD",'ROI',"Revenue", 'Profit', "Equity", "Assets"]
@@ -201,4 +229,4 @@ with open('O-Scores.csv', 'w', newline="") as f:
     csvWriter = csv.writer(f)
     for score in oScoreArr:
         csvWriter.writerow([score])    
-    print("DONe")
+    # print("DONe")
