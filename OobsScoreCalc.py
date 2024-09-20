@@ -1,11 +1,40 @@
 import math
 import random
 import numpy as np
-import csv
+import pandas as pd
+
 metricNames =     ['P/E', 'EV/EBITDA', 'P/B', 'P/CF', 'P/S', 'ROE',  'ROA',             "ROD",'ROI',"Revenue", 'Profit', "Equity", "Assets"]
+# ROE: [(TTM Net Income/ TTM Shareholder Equity) - (15yrPast Net Income/ 15yrPast Shareholder Equity)] / (15yrPast Net Income/ 15yrPast Shareholder Equity)
+    # OCF Per Share: TTM-OCF/Shares-Outstanding
+# P/CF: Share-Price (30 day avg) / OCF Per Share **If Share Price not available, another formula: https://www.investopedia.com/terms/p/price-to-cash-flowratio.asp
+
+# ROA: [(TTM Net Income/TTM Total Assets) - (15yrPast Net Income/15yrPast Total Assets)] / (15yrPast Net Income/15yrPast Total Assets)
+
+netIncmTTM = 0
+netIncm15yr = 0
+shEqTTM = 0
+shEq15yr = 0
+
+ocfTTM = 0
+shOutst = 0
+ocfPerShare = 0
+sharePrice30avg = 0
+
+totAssetsTTM = 0
+totAssets15yr = 0
+
+stockList = ["NVDA"]
+# Read the CSV file into a DataFrame
+dfFinancials = pd.read_csv('' + stockList[0] +"_annual_financials.csv")
+
+
+print(dfFinancials)
+
 baseMetricVals = [  0.54,  0.46,        0.63 , 0.56,   0.88,  150.00, 48.85,            1, 1, 1,      1,   1,      1, ]
 possibilityMatrices = []
 oScoreArr = []
+
+
 
 pe15yr = 39.58
 evEbtida15yr = 29.86
@@ -22,7 +51,7 @@ eqi15yr = 0.6126
 ast15yr = 0.4885
 
 
-numPossibilities = 100
+numPossibilities = 0
 for i in range(numPossibilities):
     print(i)
     total = 0.0
