@@ -16,9 +16,13 @@ shEqTTM = 0
 shEq15yr = 0
 
 ocfTTM = 0
-shOutst = 0
-ocfPerShare = 0
-sharePrice30avg = 0
+ocf15yr = 0
+shOutstTTM = 0
+shOutst15yr = 9
+ocfPerShareTTM = 0
+ocfPerShare15yr = 0
+sharePrice1yravg = 0
+sharePrice15yravg = 0
 
 totAssetsTTM = 0
 totAssets15yr = 0
@@ -64,7 +68,9 @@ for i in range(dfBalance["name"].size):
         print(shEq15yr)
         
     if (dfBalance.loc[i]["name"] == "ShareIssued"):
-        shOutst = int(dfBalance.loc[i][1].replace(',',""))
+        shOutstTTM = int(dfBalance.loc[i][1].replace(',',""))
+        shOutst15yr = extract15yrData(i, dfBalance,0)
+
         
         
 dfCashFlow = pd.read_csv('' + stockList[0] +"_annual_cash-flow.csv")
@@ -72,22 +78,25 @@ dfCashFlow = pd.read_csv('' + stockList[0] +"_annual_cash-flow.csv")
 for i in range(dfCashFlow["name"].size):
     if (dfCashFlow.loc[i]["name"] == "OperatingCashFlow"):
         ocfTTM = int(dfCashFlow.loc[i][1].replace(',',""))
-        
+        ocf15yr = extract15yrData(i, dfCashFlow, 0)
 
 dfSharePrice = pd.read_csv('' + stockList[0] +".csv")
-
-
 
 len = dfSharePrice.shape[0]
 
 for i in range(len):
-    if (i < 30):
+    if (i < 12):
         # print(dfSharePrice.loc[dfSharePrice.shape[0]-1-i][4])
-        sharePrice30avg += dfSharePrice.loc[dfSharePrice.shape[0]-1-i][4]
-        # print(sharePrice30avg)
-    if (i == 29):
-        sharePrice30avg = sharePrice30avg/30
+        sharePrice1yravg += dfSharePrice.loc[dfSharePrice.shape[0]-1-i][4]
+        # print(sharePrice1yravg)
+    if (i == 11):
+        sharePrice1yravg = sharePrice1yravg/12
+        
+    if (i < 180):
+        sharePrice15yravg += dfSharePrice.loc[dfSharePrice.shape[0]-1-i][4]
 
+    if (i == 179):
+        sharePrice15yravg = sharePrice15yravg/180
 
 
 pe15yr = 0
@@ -133,7 +142,11 @@ for i in range(dfValuation["name"].size):
 roe15yr = ((netIncmTTM/shEqTTM) - (netIncm15yr/shEq15yr)) / (netIncm15yr/shEq15yr)
 roa15yr = ((netIncmTTM/totAssetsTTM) - (netIncm15yr/totAssets15yr)) / (netIncm15yr/totAssets15yr)
 
-pcf15yr
+ocfPerShareTTM = ocfTTM/shOutstTTM
+ocfPerShare15yr = ocf15yr/shOutst15yr
+pcfTTM = sharePrice1yravg / ocfPerShareTTM
+pcf15yr = sharePrice15yravg / ocfPerShare15yr
+
 
 baseMetricVals = [  0.54,  0.46,        0.63 , 0.56,   0.88,  150.00, 48.85,            1, 1, 1,      1,   1,      1, ]
 possibilityMatrices = []
