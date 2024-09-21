@@ -23,13 +23,14 @@ sharePrice30avg = 0
 totAssetsTTM = 0
 totAssets15yr = 0
 
-def extract15yrData(i, csv, indexMod):
+
+def extract15yrData(k, csv, indexMod):
     dataVal = 0
     lengthIterated = 0
     for j in range(15):
         lengthIterated += 1
-        dataVal += int(csv.loc[i][j+2+indexMod].replace(',',""))
-        print(int(csv.loc[i][j+2+indexMod].replace(',',"")))
+        dataVal += int(csv.loc[k][j+2+indexMod].replace(',',""))
+        print(int(csv.loc[k][j+2+indexMod].replace(',',"")))
         
     print(dataVal)
     dataVal = dataVal / lengthIterated
@@ -44,55 +45,99 @@ dfFinancials = pd.read_csv('' + stockList[0] +"_annual_financials.csv")
 for i in range(dfFinancials["name"].size):
     
     if (dfFinancials.loc[i]["name"] == "	NetIncome"):
-        netIncmTTM = dfFinancials.loc[i]['ttm']
+        netIncmTTM = int(dfFinancials.loc[i]['ttm'].replace(',',""))
         netIncm15yr = extract15yrData(i, dfFinancials, 0)
-    
+
+
 dfBalance = pd.read_csv('' + stockList[0] +"_annual_balance-sheet.csv")
 
 for i in range(dfBalance["name"].size):
     
     if (dfBalance.loc[i]["name"] == "TotalAssets"):
-        totAssetsTTM = dfBalance.loc[i][1]
+        totAssetsTTM = int(dfBalance.loc[i][1].replace(',',""))
         totAssets15yr = extract15yrData(i, dfBalance, 0)
         print(totAssets15yr)
 
     if (dfBalance.loc[i]["name"] == "	StockholdersEquity"):
-        shEqTTM = dfBalance.loc[i][1]
+        shEqTTM = int(dfBalance.loc[i][1].replace(',',""))
         shEq15yr = extract15yrData(i, dfBalance,0)
         print(shEq15yr)
         
     if (dfBalance.loc[i]["name"] == "ShareIssued"):
-        shOutst = dfBalance[i][1]
+        shOutst = int(dfBalance.loc[i][1].replace(',',""))
+        
         
 dfCashFlow = pd.read_csv('' + stockList[0] +"_annual_cash-flow.csv")
 
-for i in range(dfBalance["name"].size):
-    if (dfBalance.loc[i]["name"] == "OperatingCashFlow"):
-        ocfTTM = dfBalance.loc[i]['ttm']
+for i in range(dfCashFlow["name"].size):
+    if (dfCashFlow.loc[i]["name"] == "OperatingCashFlow"):
+        ocfTTM = int(dfCashFlow.loc[i][1].replace(',',""))
         
-ocfPerShare = ocfTTM/shOutst
 
+dfSharePrice = pd.read_csv('' + stockList[0] +".csv")
+
+
+
+len = dfSharePrice.shape[0]
+
+for i in range(len):
+    if (i < 30):
+        # print(dfSharePrice.loc[dfSharePrice.shape[0]-1-i][4])
+        sharePrice30avg += dfSharePrice.loc[dfSharePrice.shape[0]-1-i][4]
+        # print(sharePrice30avg)
+    if (i == 29):
+        sharePrice30avg = sharePrice30avg/30
+
+
+
+pe15yr = 0
+evEbtida15yr = 0
+pb15yr = 0
+pcf15yr = 0
+ps15yr = 0
+roe15yr = 0
+roa15yr = 0
+rod15yr = 0
+roi15yr = 0
+rev15yr = 0
+prf15yr = 0
+eqi15yr = 0
+ast15yr = 0
+
+dfValuation = pd.read_csv('' + stockList[0] +"_annual_valuation_measures.csv")
+
+for i in range(dfValuation["name"].size):
+    
+    if (dfValuation.loc[i]["name"] == "PeRatio"):
+        pe15yr = extract15yrData(i, dfValuation, 0)
+    print(pe15yr)
+    
+    if (dfValuation.loc[i]["name"] == "PsRatio"):
+        ps15yr = extract15yrData(i, dfValuation, 0)
+    print(ps15yr)
+    
+    if (dfValuation.loc[i]["name"] == "PbRatio"):
+        pb15yr = extract15yrData(i, dfValuation, 0)
+    print(pb15yr)
+    
+    if (dfValuation.loc[i]["name"] == "EnterprisesValueEBITDARatio"):
+        evEbtida15yr = extract15yrData(i, dfValuation, 0)
+    print(evEbtida15yr)
+
+# ROE: [(TTM Net Income/ TTM Shareholder Equity) - (15yrPast Net Income/ 15yrPast Shareholder Equity)] / (15yrPast Net Income/ 15yrPast Shareholder Equity)
+    # OCF Per Share: TTM-OCF/Shares-Outstanding
+# P/CF: Share-Price (30 day avg) / OCF Per Share **If Share Price not available, another formula: https://www.investopedia.com/terms/p/price-to-cash-flowratio.asp
+
+# ROA: [(TTM Net Income/TTM Total Assets) - (15yrPast Net Income/15yrPast Total Assets)] / (15yrPast Net Income/15yrPast Total Assets)
+
+roe15yr = ((netIncmTTM/shEqTTM) - (netIncm15yr/shEq15yr)) / (netIncm15yr/shEq15yr)
+roa15yr = ((netIncmTTM/totAssetsTTM) - (netIncm15yr/totAssets15yr)) / (netIncm15yr/totAssets15yr)
+
+pcf15yr
 
 baseMetricVals = [  0.54,  0.46,        0.63 , 0.56,   0.88,  150.00, 48.85,            1, 1, 1,      1,   1,      1, ]
 possibilityMatrices = []
 oScoreArr = []
-
-
-
-pe15yr = 39.58
-evEbtida15yr = 29.86
-pb15yr = 32.55
-pcf15yr = 40.67
-ps15yr = 17.25
-roe15yr = 0.9338
-roa15yr = 0.2880
-rod15yr = 1.9659
-roi15yr = 0.5224
-rev15yr = 0.8841
-prf15yr = 0.5412
-eqi15yr = 0.6126
-ast15yr = 0.4885
-
 
 numPossibilities = 0
 for i in range(numPossibilities):
