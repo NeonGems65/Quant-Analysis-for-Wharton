@@ -23,12 +23,55 @@ sharePrice30avg = 0
 totAssetsTTM = 0
 totAssets15yr = 0
 
+def extract15yrData(i, csv, indexMod):
+    dataVal = 0
+    lengthIterated = 0
+    for j in range(15):
+        lengthIterated += 1
+        dataVal += int(csv.loc[i][j+2+indexMod].replace(',',""))
+        print(int(csv.loc[i][j+2+indexMod].replace(',',"")))
+        
+    print(dataVal)
+    dataVal = dataVal / lengthIterated
+    print(dataVal)
+    
+    return dataVal
+
 stockList = ["NVDA"]
 # Read the CSV file into a DataFrame
 dfFinancials = pd.read_csv('' + stockList[0] +"_annual_financials.csv")
 
+for i in range(dfFinancials["name"].size):
+    
+    if (dfFinancials.loc[i]["name"] == "	NetIncome"):
+        netIncmTTM = dfFinancials.loc[i]['ttm']
+        netIncm15yr = extract15yrData(i, dfFinancials, 0)
+    
+dfBalance = pd.read_csv('' + stockList[0] +"_annual_balance-sheet.csv")
 
-print(dfFinancials)
+for i in range(dfBalance["name"].size):
+    
+    if (dfBalance.loc[i]["name"] == "TotalAssets"):
+        totAssetsTTM = dfBalance.loc[i][1]
+        totAssets15yr = extract15yrData(i, dfBalance, 0)
+        print(totAssets15yr)
+
+    if (dfBalance.loc[i]["name"] == "	StockholdersEquity"):
+        shEqTTM = dfBalance.loc[i][1]
+        shEq15yr = extract15yrData(i, dfBalance,0)
+        print(shEq15yr)
+        
+    if (dfBalance.loc[i]["name"] == "ShareIssued"):
+        shOutst = dfBalance[i][1]
+        
+dfCashFlow = pd.read_csv('' + stockList[0] +"_annual_cash-flow.csv")
+
+for i in range(dfBalance["name"].size):
+    if (dfBalance.loc[i]["name"] == "OperatingCashFlow"):
+        ocfTTM = dfBalance.loc[i]['ttm']
+        
+ocfPerShare = ocfTTM/shOutst
+
 
 baseMetricVals = [  0.54,  0.46,        0.63 , 0.56,   0.88,  150.00, 48.85,            1, 1, 1,      1,   1,      1, ]
 possibilityMatrices = []
