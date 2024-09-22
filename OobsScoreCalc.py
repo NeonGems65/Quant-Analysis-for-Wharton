@@ -29,12 +29,16 @@ totAssets15yr = 0
 
 
 def extract15yrData(k, csv, indexMod):
-    dataVal = 0
+    dataVal = 0.0
     lengthIterated = 0
     for j in range(15):
         lengthIterated += 1
-        dataVal += int(csv.loc[k][j+2+indexMod].replace(',',""))
-        print(int(csv.loc[k][j+2+indexMod].replace(',',"")))
+        if isinstance(csv.loc[k][j+2+indexMod], str):
+            dataVal += float(csv.loc[k][j+2+indexMod].replace(',',""))
+            print(float(csv.loc[k][j+2+indexMod].replace(',',"")))
+        else: 
+            dataVal += csv.loc[k][j+2+indexMod]
+        print(dataVal)
         
     print(dataVal)
     dataVal = dataVal / lengthIterated
@@ -139,13 +143,22 @@ for i in range(dfValuation["name"].size):
 
 # ROA: [(TTM Net Income/TTM Total Assets) - (15yrPast Net Income/15yrPast Total Assets)] / (15yrPast Net Income/15yrPast Total Assets)
 
-roe15yr = ((netIncmTTM/shEqTTM) - (netIncm15yr/shEq15yr)) / (netIncm15yr/shEq15yr)
-roa15yr = ((netIncmTTM/totAssetsTTM) - (netIncm15yr/totAssets15yr)) / (netIncm15yr/totAssets15yr)
 
-ocfPerShareTTM = ocfTTM/shOutstTTM
+roe15yr = netIncm15yr / shEq15yr
+print("roe15yr v1")
+print(roe15yr)
+
+
+
+roa15yr = netIncm15yr / totAssets15yr
+
+# ocfPerShareTTM = ocfTTM/shOutstTTM
 ocfPerShare15yr = ocf15yr/shOutst15yr
-pcfTTM = sharePrice1yravg / ocfPerShareTTM
+# pcfTTM = sharePrice1yravg / ocfPerShareTTM
+
 pcf15yr = sharePrice15yravg / ocfPerShare15yr
+
+
 
 
 baseMetricVals = [  0.54,  0.46,        0.63 , 0.56,   0.88,  150.00, 48.85,            1, 1, 1,      1,   1,      1, ]
@@ -283,7 +296,7 @@ for i in range(numPossibilities):
     for  i in range(len(baseMetricVals)):
         
         if (metricNames[i] == "P/E"):
-            pe = baseMetricVals[i] / peMod
+            pe = pe15yr / peMod
             pe = ((pe15yr/pe) * (1/13))
             possibilityMatrix.append(pe)
 
