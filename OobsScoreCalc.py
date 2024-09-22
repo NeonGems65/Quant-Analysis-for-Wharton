@@ -2,6 +2,7 @@ import math
 import random
 import numpy as np
 import pandas as pd
+import csv
 
 metricNames =     ['P/E', 'EV/EBITDA', 'P/B', 'P/CF', 'P/S', 'ROE',  'ROA',             "ROD",'ROI',"Revenue", 'Profit', "Equity", "Assets"]
 # ROE: [(TTM Net Income/ TTM Shareholder Equity) - (15yrPast Net Income/ 15yrPast Shareholder Equity)] / (15yrPast Net Income/ 15yrPast Shareholder Equity)
@@ -27,6 +28,16 @@ sharePrice15yravg = 0
 totAssetsTTM = 0
 totAssets15yr = 0
 
+longDebt15yr = 0
+capex15yr = 0
+
+revenue15yr = 0
+revenueTTM = 0
+
+profit15yr = 0
+profitTTM = 0
+
+
 
 def extract15yrData(k, csv, indexMod):
     dataVal = 0.0
@@ -35,19 +46,19 @@ def extract15yrData(k, csv, indexMod):
         lengthIterated += 1
         if isinstance(csv.loc[k][j+2+indexMod], str):
             dataVal += float(csv.loc[k][j+2+indexMod].replace(',',""))
-            print(float(csv.loc[k][j+2+indexMod].replace(',',"")))
+            # print(float(csv.loc[k][j+2+indexMod].replace(',',"")))
+        elif pd.isnull(csv.loc[k][j+2+indexMod]):
+            lengthIterated -= 1
         else: 
             dataVal += csv.loc[k][j+2+indexMod]
-        print(dataVal)
         
-    print(dataVal)
     dataVal = dataVal / lengthIterated
-    print(dataVal)
     
     return dataVal
 
 stockList = ["NVDA"]
-# Read the CSV file into a DataFrame
+
+# --------------- Financials CSV ---------------        
 dfFinancials = pd.read_csv('' + stockList[0] +"_annual_financials.csv")
 
 for i in range(dfFinancials["name"].size):
@@ -55,7 +66,16 @@ for i in range(dfFinancials["name"].size):
     if (dfFinancials.loc[i]["name"] == "	NetIncome"):
         netIncmTTM = int(dfFinancials.loc[i]['ttm'].replace(',',""))
         netIncm15yr = extract15yrData(i, dfFinancials, 0)
+        
+    if (dfFinancials.loc[i]["name"] == "TotalRevenue"):
+        revenueTTM = int(dfFinancials.loc[i]['ttm'].replace(',',""))
+        revenue15yr = extract15yrData(i, dfFinancials, 0)
+    
+    if (dfFinancials.loc[i]["name"] == "GrossProfit"):
+        profitTTM = int(dfFinancials.loc[i]['ttm'].replace(',',""))
+        profit15yr = extract15yrData(i, dfFinancials, 0)
 
+# --------------- Balance Sheet CSV ---------------        
 
 dfBalance = pd.read_csv('' + stockList[0] +"_annual_balance-sheet.csv")
 
@@ -64,28 +84,31 @@ for i in range(dfBalance["name"].size):
     if (dfBalance.loc[i]["name"] == "TotalAssets"):
         totAssetsTTM = int(dfBalance.loc[i][1].replace(',',""))
         totAssets15yr = extract15yrData(i, dfBalance, 0)
-        print(totAssets15yr)
 
     if (dfBalance.loc[i]["name"] == "	StockholdersEquity"):
         shEqTTM = int(dfBalance.loc[i][1].replace(',',""))
         shEq15yr = extract15yrData(i, dfBalance,0)
-        print(shEq15yr)
         
     if (dfBalance.loc[i]["name"] == "ShareIssued"):
         shOutstTTM = int(dfBalance.loc[i][1].replace(',',""))
         shOutst15yr = extract15yrData(i, dfBalance,0)
-
+    
+    if (dfBalance.loc[i]["name"] == "			LongTermDebt"):
+        longDebt15yr = extract15yrData(i, dfBalance, 0)
         
-        
+# --------------- Cash Flow CSV ---------------        
 dfCashFlow = pd.read_csv('' + stockList[0] +"_annual_cash-flow.csv")
 
 for i in range(dfCashFlow["name"].size):
     if (dfCashFlow.loc[i]["name"] == "OperatingCashFlow"):
         ocfTTM = int(dfCashFlow.loc[i][1].replace(',',""))
         ocf15yr = extract15yrData(i, dfCashFlow, 0)
+        
+    if (dfCashFlow.loc[i]["name"] == "CapitalExpenditure"):
+        capex15yr = extract15yrData(i, dfCashFlow, 0)
 
+# --------------- Share Price CSV ---------------
 dfSharePrice = pd.read_csv('' + stockList[0] +".csv")
-
 len = dfSharePrice.shape[0]
 
 for i in range(len):
@@ -117,25 +140,22 @@ prf15yr = 0
 eqi15yr = 0
 ast15yr = 0
 
+# --------------- Valuation CSV ---------------        
 dfValuation = pd.read_csv('' + stockList[0] +"_annual_valuation_measures.csv")
 
 for i in range(dfValuation["name"].size):
     
     if (dfValuation.loc[i]["name"] == "PeRatio"):
         pe15yr = extract15yrData(i, dfValuation, 0)
-    print(pe15yr)
-    
+        print(pe15yr)
     if (dfValuation.loc[i]["name"] == "PsRatio"):
         ps15yr = extract15yrData(i, dfValuation, 0)
-    print(ps15yr)
     
     if (dfValuation.loc[i]["name"] == "PbRatio"):
         pb15yr = extract15yrData(i, dfValuation, 0)
-    print(pb15yr)
     
     if (dfValuation.loc[i]["name"] == "EnterprisesValueEBITDARatio"):
         evEbtida15yr = extract15yrData(i, dfValuation, 0)
-    print(evEbtida15yr)
 
 # ROE: [(TTM Net Income/ TTM Shareholder Equity) - (15yrPast Net Income/ 15yrPast Shareholder Equity)] / (15yrPast Net Income/ 15yrPast Shareholder Equity)
     # OCF Per Share: TTM-OCF/Shares-Outstanding
@@ -145,21 +165,29 @@ for i in range(dfValuation["name"].size):
 
 
 roe15yr = netIncm15yr / shEq15yr
-print("roe15yr v1")
-print(roe15yr)
-
-
-
 roa15yr = netIncm15yr / totAssets15yr
+
+rod15yr = netIncm15yr / longDebt15yr
+roi15yr = netIncm15yr / capex15yr
+
 
 # ocfPerShareTTM = ocfTTM/shOutstTTM
 ocfPerShare15yr = ocf15yr/shOutst15yr
 # pcfTTM = sharePrice1yravg / ocfPerShareTTM
-
 pcf15yr = sharePrice15yravg / ocfPerShare15yr
 
+print("profit")
+print(profitTTM)
+print(profit15yr)
+revenueGrowth15yr = (revenueTTM - revenue15yr) / revenue15yr
+equityGrowth15yr = (shEqTTM - shEq15yr) / shEq15yr
+profitGrowth15yr = (profitTTM - profit15yr) / profit15yr
+assetsGrowth15yr = (totAssetsTTM - totAssets15yr) / totAssets15yr
 
+debtToAssets = (longDebt15yr/totAssets15yr)
 
+stock15yrMetrics = [pe15yr, evEbtida15yr, pb15yr, pcf15yr, ps15yr, roe15yr, roa15yr, rod15yr, roi15yr, revenueGrowth15yr, profitGrowth15yr, equityGrowth15yr, assetsGrowth15yr, debtToAssets ]
+print(stock15yrMetrics)
 
 baseMetricVals = [  0.54,  0.46,        0.63 , 0.56,   0.88,  150.00, 48.85,            1, 1, 1,      1,   1,      1, ]
 possibilityMatrices = []
@@ -368,8 +396,13 @@ for i in range(numPossibilities):
     
 print(oScoreArr)
 
-with open('O-Scores.csv', 'w', newline="") as f:
+# with open('O-Scores.csv', 'w', newline="") as f:
+#     csvWriter = csv.writer(f)
+#     for score in oScoreArr:
+#         csvWriter.writerow([score])    
+#     # print("DONe")
+fileName = stockList[0] + "_metrics.csv"
+with open(fileName, 'w', newline="") as f:
     csvWriter = csv.writer(f)
-    for score in oScoreArr:
-        csvWriter.writerow([score])    
-    # print("DONe")
+    csvWriter.writerow(metricNames)
+    csvWriter.writerow(stock15yrMetrics)
