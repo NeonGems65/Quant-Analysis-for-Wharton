@@ -166,6 +166,7 @@ for m in range(len(stockList)):
         
         if (dfValuation.loc[i]["name"] == "EnterprisesValueEBITDARatio"):
             evEbtida15yr = extract15yrData(i, dfValuation, 0)
+            evEbitdaTTM = int(dfValuation.loc[i][1].replace(',',""))
 
     # ROE: [(TTM Net Income/ TTM Shareholder Equity) - (15yrPast Net Income/ 15yrPast Shareholder Equity)] / (15yrPast Net Income/ 15yrPast Shareholder Equity)
         # OCF Per Share: TTM-OCF/Shares-Outstanding
@@ -197,6 +198,9 @@ for m in range(len(stockList)):
     print('long debt')
     debtToAssets = (longDebt15yr/totAssets15yr)
 
+    ebitdaGrowth15yr = (evEbitdaTTM - evEbtida15yr) / evEbtida15yr
+    cfGrowth15yr = (ocfTTM - ocf15yr) / ocf15yr
+    
     metrics = [pe15yr, evEbtida15yr, pb15yr, pcf15yr, ps15yr, roe15yr, roa15yr, rod15yr, roi15yr, revenueGrowth15yr, profitGrowth15yr, equityGrowth15yr, assetsGrowth15yr, debtToAssets ]
     stock15yrMetrics.append(metrics)
 
