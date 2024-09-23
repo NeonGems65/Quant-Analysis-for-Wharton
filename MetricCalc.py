@@ -12,7 +12,7 @@ metricNames =     ['P/E', 'EV/EBITDA', 'P/B', 'P/CF', 'P/S', 'ROE',  'ROA',     
 
 # ROA: [(TTM Net Income/TTM Total Assets) - (15yrPast Net Income/15yrPast Total Assets)] / (15yrPast Net Income/15yrPast Total Assets)
 
-stockList = ["NVDA", "INFY"]
+stockList = ["NVDA", "INFY", "PLNT"]
 stock15yrMetrics = []
 
 for m in range(len(stockList)):
@@ -47,13 +47,16 @@ for m in range(len(stockList)):
     def extract15yrData(k, csv, indexMod):
         dataVal = 0.0
         lengthIterated = 0
-        for j in range(15):
-            lengthIterated += 1
-            if isinstance(csv.loc[k][j+2+indexMod], str):
+        for j in range(csv.loc[k].size - 2):
+            
+            if lengthIterated < 15 and isinstance(csv.loc[k][j+2+indexMod], str):
                 dataVal += float(csv.loc[k][j+2+indexMod].replace(',',""))
                 # print(float(csv.loc[k][j+2+indexMod].replace(',',"")))
+                lengthIterated += 1
+            elif lengthIterated >= 15:
+                break
             elif pd.isnull(csv.loc[k][j+2+indexMod]):
-                lengthIterated -= 1
+                print('nothing will be done')
             else: 
                 dataVal += csv.loc[k][j+2+indexMod]
             
@@ -166,8 +169,7 @@ for m in range(len(stockList)):
         
         if (dfValuation.loc[i]["name"] == "EnterprisesValueEBITDARatio"):
             evEbtida15yr = extract15yrData(i, dfValuation, 0)
-            evEbitdaTTM = int(dfValuation.loc[i][1].replace(',',""))
-
+            evEbitdaTTM = float(dfValuation.loc[i][1].replace(',',""))
     # ROE: [(TTM Net Income/ TTM Shareholder Equity) - (15yrPast Net Income/ 15yrPast Shareholder Equity)] / (15yrPast Net Income/ 15yrPast Shareholder Equity)
         # OCF Per Share: TTM-OCF/Shares-Outstanding
     # P/CF: Share-Price (30 day avg) / OCF Per Share **If Share Price not available, another formula: https://www.investopedia.com/terms/p/price-to-cash-flowratio.asp
