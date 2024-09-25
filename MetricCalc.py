@@ -15,8 +15,9 @@ metricNames =     ['P/E', 'EV/EBITDA', 'P/B', 'P/CF', 'P/S', 'ROE',  'ROA',     
 
 consumDiscStockList = ["AEO", "AMZN", "ANF", "APTV", "AZO", "BABA", "BBW", "BBY", "BNED", "BURL", "BWA", "CAAS", "CAKE", "CMG", "CZR", "EDU", "ETSY", "FL", "F", "GM", "GRMN", "GRPN", "HAS", "HD", "HMC", "HOG", "HRB", "H", "KMX", "LCII", "LE", "LOW", "LULU", "LVS", "MAR", "MAT", "MCD", "MOV", "M", "NCLH", "NKE", "ORLY", "PLNT", "PTON", "PZZA", "SBUX", "SFIX", "SONY", "SWBI", "TAL", "TCS", "TJX", "TM", "TSLA", "TXRH", "UA", "ULTA", "URBN", "VFC", "VRA", "WEN", "WH", "WSM", "YUM"]
 healthStockList = ["ABBV", "ABT", "ACAD", "AMGN", "AMN", "BAX", "BMY", "CI", "CNC", "CPRX", "CVS", "DOC", "GILD", "GMAB", "GMED", "GSK", "HBIO", "ILMN", "IQV", "JNJ", "LQDA", "MCK", "MRK", "MYGN", "NVO", "NVS", "PBH", "PFE", "REGN", "TEVA", "UNH", "VEEV"]
-
-stockList = healthStockList
+infoTechStockList = ["AAPL", "ACN", "ADBE", "ADI", "ADP", "AEHR", "AMAT", "AMD", "ANET", "ASGN", "ASML", "AVGO", "BILL", "CRM", "CRWD", "CSCO", "CTSH", "DBX", "DELL", "DJCO", "DXC", "FICO", "FTNT", "IBM", "INTC", "INTU", "MANH", "MSFT", "MSI", "NCTY", "NOW", "NVDA", "NXPI", "ORCL", "PANW", "PLTR", "QCOM", "SAP", "SEDG", "SNOW", "TSM", "TXN", "UTSI", "XRX"]
+financialsStockList = ["AFL", "ALL", "APAM", "AXP", "BAC", "BAM", "BCS", "BEN", "BLK", "BX", "C", "DB", "DFS", "GBCI", "GEG", "GS", "ICE", "JPM", "KEY", "KKR", "L", "LAZ", "MA", "MCO", "MET", "MS", "MTB", "ONB", "OPY", "OZK", "PNC", "PRU", "PYPL", "RF", "SCHW", "SEIC", "TROW", "UBS", "V", "WFC"]
+stockList = financialsStockList
 stock15yrMetrics = []
 
 for m in range(len(stockList)):
@@ -73,7 +74,7 @@ for m in range(len(stockList)):
 
 
     # --------------- Financials CSV ---------------        
-    dfFinancials = pd.read_csv('./Healthcare/' + stockList[m] +"_annual_financials.csv")
+    dfFinancials = pd.read_csv('./Financials/' + stockList[m] +"_annual_financials.csv")
 
     for i in range(dfFinancials["name"].size):
         
@@ -92,30 +93,60 @@ for m in range(len(stockList)):
             else:
                 profitTTM = int(dfFinancials.loc[i]['ttm'].replace(',',""))
             profit15yr = extract15yrData(i, dfFinancials, 0)
+        
+        elif (dfFinancials.loc[i]["name"] == "TotalRevenue"):
+            if pd.isnull(dfFinancials.loc[i][1]):
+                print('nothing will be done')
+                totRev = 0
+            else:
+                totRev = int(dfFinancials.loc[i]['ttm'].replace(',',""))
+            totRev15yr = extract15yrData(i, dfFinancials, 0)
+            
+        if (dfFinancials.loc[i]["name"] == "TotalExpenses"):
+            if pd.isnull(dfFinancials.loc[i][1]):
+                print('nothing will be done')
+                totExp = 0
+            else:
+                totExp = int(dfFinancials.loc[i]['ttm'].replace(',',""))
+            totExp15yr = extract15yrData(i, dfFinancials, 0)
+
+            profitTTM = totRev - totExp
+            profit15yr = totRev15yr - totExp15yr
 
     # --------------- Balance Sheet CSV ---------------        
 
-    dfBalance = pd.read_csv('./Healthcare/' + stockList[m] +"_annual_balance-sheet.csv")
+    dfBalance = pd.read_csv('./Financials/' + stockList[m] +"_annual_balance-sheet.csv")
 
     for i in range(dfBalance["name"].size):
         
         if (dfBalance.loc[i]["name"] == "TotalAssets"):
-            totAssetsTTM = int(dfBalance.loc[i][1].replace(',',""))
+            try:
+                totAssetsTTM = int(dfBalance.loc[i][1].replace(',',""))
+            except AttributeError:
+                totAssetsTTM = dfBalance.loc[i][1]
+                
             totAssets15yr = extract15yrData(i, dfBalance, 0)
 
         if (dfBalance.loc[i]["name"] == "	StockholdersEquity"):
-            shEqTTM = int(dfBalance.loc[i][1].replace(',',""))
+            try:
+                shEqTTM = int(dfBalance.loc[i][1].replace(',',""))
+            except AttributeError:
+                shEqTTM = dfBalance.loc[i][1]
             shEq15yr = extract15yrData(i, dfBalance,0)
             
         if (dfBalance.loc[i]["name"] == "ShareIssued"):
-            shOutstTTM = int(dfBalance.loc[i][1].replace(',',""))
+            try:
+                shOutstTTM = int(dfBalance.loc[i][1].replace(',',""))
+            except AttributeError:
+                shOutstTTM = dfBalance.loc[i][1]
             shOutst15yr = extract15yrData(i, dfBalance,0)
+            
         
-        if (dfBalance.loc[i]["name"] == "			LongTermDebt"):
+        if (dfBalance.loc[i]["name"] == "		LongTermDebt"):
             longDebt15yr = extract15yrData(i, dfBalance, 0)
             
     # --------------- Cash Flow CSV ---------------        
-    with open('./Healthcare/' + stockList[m] + '_annual_cash-flow.csv', 'r') as file:
+    with open('./Financials/' + stockList[m] + '_annual_cash-flow.csv', 'r') as file:
         csv_content = file.read()
 
     # Replace non-breaking spaces with regular spaces
@@ -123,29 +154,32 @@ for m in range(len(stockList)):
     dfCashFlow = pd.read_csv(StringIO(csv_content))
     for i in range(dfCashFlow["name"].size):
         if (dfCashFlow.loc[i]["name"] == "OperatingCashFlow"):
-            ocfTTM = int(dfCashFlow.loc[i][1].replace(',',""))
+            try:
+                ocfTTM = int(dfCashFlow.loc[i][1].replace(',',""))
+            except AttributeError:
+                ocfTTM += dfCashFlow.loc[i][1]
             ocf15yr = extract15yrData(i, dfCashFlow, 0)
             
         if (dfCashFlow.loc[i]["name"] == "CapitalExpenditure"):
             capex15yr = extract15yrData(i, dfCashFlow, 0)
 
     # --------------- Share Price CSV ---------------
-    dfSharePrice = pd.read_csv('./Healthcare/' + stockList[m] +".csv")
+    dfSharePrice = pd.read_csv('./Financials/' + stockList[m] +".csv")
     len = dfSharePrice.shape[0]
 
     for i in range(len):
-        if (i < 12):
+        if (i < 252):
             # print(dfSharePrice.loc[dfSharePrice.shape[0]-1-i][4])
             sharePrice1yravg += dfSharePrice.loc[dfSharePrice.shape[0]-1-i][4]
             # print(sharePrice1yravg)
-        if (i == 11):
-            sharePrice1yravg = sharePrice1yravg/12
+        if (i == 251):
+            sharePrice1yravg = sharePrice1yravg/252
             
-        if (i < 180):
+        if (i < 3780):
             sharePrice15yravg += dfSharePrice.loc[dfSharePrice.shape[0]-1-i][4]
 
-        if (i == 179):
-            sharePrice15yravg = sharePrice15yravg/180
+        if (i == 3779):
+            sharePrice15yravg = sharePrice15yravg/3780
 
 
     pe15yr = 0
@@ -163,7 +197,7 @@ for m in range(len(stockList)):
     ast15yr = 0
 
     # --------------- Valuation CSV ---------------        
-    dfValuation = pd.read_csv('./Healthcare/' + stockList[m] +"_annual_valuation_measures.csv")
+    dfValuation = pd.read_csv('./Financials/' + stockList[m] +"_annual_valuation_measures.csv")
 
     for i in range(dfValuation["name"].size):
         
@@ -189,10 +223,10 @@ for m in range(len(stockList)):
 
     # ROA: [(TTM Net Income/TTM Total Assets) - (15yrPast Net Income/15yrPast Total Assets)] / (15yrPast Net Income/15yrPast Total Assets)
 
-
     roe15yr = netIncm15yr / shEq15yr
     roa15yr = netIncm15yr / totAssets15yr
     
+    print(stockList[m])
     try:
         rod15yr = netIncm15yr / longDebt15yr
     except ZeroDivisionError:
@@ -215,6 +249,8 @@ for m in range(len(stockList)):
     try:
         ebitdaGrowth15yr = (evEbitdaTTM - evEbtida15yr) / evEbtida15yr
     except ZeroDivisionError:
+        ebitdaGrowth15yr = 0
+    except NameError:
         ebitdaGrowth15yr = 0
 
     cfGrowth15yr = (ocfTTM - ocf15yr) / ocf15yr
