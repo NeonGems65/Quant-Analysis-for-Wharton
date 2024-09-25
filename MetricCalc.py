@@ -6,7 +6,7 @@ import csv
 from io import StringIO
 import os
 
-metricNames =     ['P/E', 'EV/EBITDA', 'P/B', 'P/CF', 'P/S', 'ROE',  'ROA',             "ROD",'ROI',"Revenue", 'Profit', "Equity", "Assets", "D/A", "Ebitda Growth", "CF Growth"]
+metricNames =     ['P/E', 'EV/EBITDA', 'P/B', 'P/CF', 'P/S', 'ROE',  'ROA',             "ROD",'ROI',"Revenue", 'Profit', "Equity", "Assets", "D/A", "Ebitda Growth", "CF Growth", "Equity Multiplier"]
 # ROE: [(TTM Net Income/ TTM Shareholder Equity) - (15yrPast Net Income/ 15yrPast Shareholder Equity)] / (15yrPast Net Income/ 15yrPast Shareholder Equity)
     # OCF Per Share: TTM-OCF/Shares-Outstanding
 # P/CF: Share-Price (30 day avg) / OCF Per Share **If Share Price not available, another formula: https://www.investopedia.com/terms/p/price-to-cash-flowratio.asp
@@ -17,7 +17,7 @@ consumDiscStockList = ["AEO", "AMZN", "ANF", "APTV", "AZO", "BABA", "BBW", "BBY"
 healthStockList = ["ABBV", "ABT", "ACAD", "AMGN", "AMN", "BAX", "BMY", "CI", "CNC", "CPRX", "CVS", "DOC", "GILD", "GMAB", "GMED", "GSK", "HBIO", "ILMN", "IQV", "JNJ", "LQDA", "MCK", "MRK", "MYGN", "NVO", "NVS", "PBH", "PFE", "REGN", "TEVA", "UNH", "VEEV"]
 infoTechStockList = ["AAPL", "ACN", "ADBE", "ADI", "ADP", "AEHR", "AMAT", "AMD", "ANET", "ASGN", "ASML", "AVGO", "BILL", "CRM", "CRWD", "CSCO", "CTSH", "DBX", "DELL", "DJCO", "DXC", "FICO", "FTNT", "IBM", "INTC", "INTU", "MANH", "MSFT", "MSI", "NCTY", "NOW", "NVDA", "NXPI", "ORCL", "PANW", "PLTR", "QCOM", "SAP", "SEDG", "SNOW", "TSM", "TXN", "UTSI", "XRX"]
 financialsStockList = ["AFL", "ALL", "APAM", "AXP", "BAC", "BAM", "BCS", "BEN", "BLK", "BX", "C", "DB", "DFS", "GBCI", "GEG", "GS", "ICE", "JPM", "KEY", "KKR", "L", "LAZ", "MA", "MCO", "MET", "MS", "MTB", "ONB", "OPY", "OZK", "PNC", "PRU", "PYPL", "RF", "SCHW", "SEIC", "TROW", "UBS", "V", "WFC"]
-stockList = financialsStockList
+stockList = infoTechStockList
 stock15yrMetrics = []
 
 for m in range(len(stockList)):
@@ -74,7 +74,7 @@ for m in range(len(stockList)):
 
 
     # --------------- Financials CSV ---------------        
-    dfFinancials = pd.read_csv('./Financials/' + stockList[m] +"_annual_financials.csv")
+    dfFinancials = pd.read_csv('./Information-Technology/' + stockList[m] +"_annual_financials.csv")
 
     for i in range(dfFinancials["name"].size):
         
@@ -115,7 +115,7 @@ for m in range(len(stockList)):
 
     # --------------- Balance Sheet CSV ---------------        
 
-    dfBalance = pd.read_csv('./Financials/' + stockList[m] +"_annual_balance-sheet.csv")
+    dfBalance = pd.read_csv('./Information-Technology/' + stockList[m] +"_annual_balance-sheet.csv")
 
     for i in range(dfBalance["name"].size):
         
@@ -142,11 +142,11 @@ for m in range(len(stockList)):
             shOutst15yr = extract15yrData(i, dfBalance,0)
             
         
-        if (dfBalance.loc[i]["name"] == "		LongTermDebt"):
+        if (dfBalance.loc[i]["name"] == "			LongTermDebt"):
             longDebt15yr = extract15yrData(i, dfBalance, 0)
             
     # --------------- Cash Flow CSV ---------------        
-    with open('./Financials/' + stockList[m] + '_annual_cash-flow.csv', 'r') as file:
+    with open('./Information-Technology/' + stockList[m] + '_annual_cash-flow.csv', 'r') as file:
         csv_content = file.read()
 
     # Replace non-breaking spaces with regular spaces
@@ -164,7 +164,7 @@ for m in range(len(stockList)):
             capex15yr = extract15yrData(i, dfCashFlow, 0)
 
     # --------------- Share Price CSV ---------------
-    dfSharePrice = pd.read_csv('./Financials/' + stockList[m] +".csv")
+    dfSharePrice = pd.read_csv('./Information-Technology/' + stockList[m] +".csv")
     len = dfSharePrice.shape[0]
 
     for i in range(len):
@@ -197,7 +197,7 @@ for m in range(len(stockList)):
     ast15yr = 0
 
     # --------------- Valuation CSV ---------------        
-    dfValuation = pd.read_csv('./Financials/' + stockList[m] +"_annual_valuation_measures.csv")
+    dfValuation = pd.read_csv('./Information-Technology/' + stockList[m] +"_annual_valuation_measures.csv")
 
     for i in range(dfValuation["name"].size):
         
@@ -254,8 +254,9 @@ for m in range(len(stockList)):
         ebitdaGrowth15yr = 0
 
     cfGrowth15yr = (ocfTTM - ocf15yr) / ocf15yr
+    equityMult = totAssets15yr / shEq15yr
     
-    metrics = [pe15yr, evEbtida15yr, pb15yr, pcf15yr, ps15yr, roe15yr, roa15yr, rod15yr, roi15yr, revenueGrowth15yr, profitGrowth15yr, equityGrowth15yr, assetsGrowth15yr, debtToAssets, ebitdaGrowth15yr, cfGrowth15yr ]
+    metrics = [pe15yr, evEbtida15yr, pb15yr, pcf15yr, ps15yr, roe15yr, roa15yr, rod15yr, roi15yr, revenueGrowth15yr, profitGrowth15yr, equityGrowth15yr, assetsGrowth15yr, debtToAssets, ebitdaGrowth15yr, cfGrowth15yr, equityMult ]
     stock15yrMetrics.append(metrics)
 
 fileName = "all_metrics.csv"

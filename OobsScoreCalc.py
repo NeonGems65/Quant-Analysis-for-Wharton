@@ -16,21 +16,25 @@ metricNames =     ['P/E', 'EV/EBITDA', 'P/B', 'P/CF', 'P/S', 'ROE',  'ROA',     
 baseMetricVals = [  0.54,  0.46,        0.63 , 0.56,   0.88,  150.00, 48.85,            1, 1, 1,      1,   1,      1, ]
 possibilityMatrices = []
 oScoreArr = []
-pe15yr = 64.41
-evEbtida15yr = 13.45
-pb15yr = 11.186
-pcf15yr = 369298.069
-ps15yr = 8.732
-roe15yr = 0.1711
-roa15yr = 0.07405
-rod15yr = 5.515
-roi15yr = -2.658
-rev15yr = 1.023
-prf15yr = 0.98
-eqi15yr = 1.2767
-ast15yr=1.22
+pe15yr = 33.402
+evEbtida15yr = 15.078
+pb15yr = 9.0278
+pcf15yr = 30.2425
+ps15yr = 5.295
+roe15yr = 0.1903
+roa15yr = 0.0806
+rod15yr = 0.2828
+roi15yr = -3.264
+rev15yr = 0.748
+prf15yr = 0.8509
+eqi15yr = 0.7689
+ast15yr= 0.8548
+ebitdaGrowth = 0.299
+cfGrowth = 0.948
+eqiMult = 2.148
 
-numPossibilities = 10
+
+numPossibilities = 10 
 for i in range(numPossibilities):
     print(i)
     total = 0.0
@@ -156,63 +160,68 @@ for i in range(numPossibilities):
             metricNames =  ['P/E', 'EV/EBITDA', 'P/B', 'P/CF', 'P/S', 'ROE',  'ROA',             "ROD",'ROI',"Revenue", 'Profit', "Equity", "Assets"]
             break
             
+            
 
     possibilityMatrix = []
     for  i in range(len(baseMetricVals)):
         
         if (metricNames[i] == "P/E"):
-            pe = ((pe15yr/peMod) * (1/13))
+            pe = ((pe15yr/(prf15yr/peMod))) * (1/13)
             possibilityMatrix.append(pe)
-
+        
 
         if (metricNames[i] == "EV/EBITDA"):
-            evEbitda = ((evEbtida15yr/evEbitdaMod) * (1/13))
+            evEbitda = ((evEbtida15yr/(ebitdaGrowth/evEbitdaMod))) * (1/13)
             possibilityMatrix.append(evEbitda)
-
+            
+        
         if (metricNames[i] == "P/B"):
-            pb = ((pb15yr/pbMod) * (1/13))
+            pb = (pb15yr) / ((roe15yr*eqi15yr)/pbMod) * (1/13)
             possibilityMatrix.append(pb)
-
+            
         if (metricNames[i] == "P/CF"):
-            pcf = ((pcf15yr/pcfMod) * (1/13))
+            pcf = (pcf15yr/(cfGrowth/pcfMod)) * (1/13)
             possibilityMatrix.append(pcf)
-
+            
         if (metricNames[i] == "P/S"):
-            ps = ((ps15yr/psMod) * (1/13))
+            ps = ((ps15yr/(rev15yr/psMod))) * (1/13)
             possibilityMatrix.append(ps)
-
+            ## Toomuch
         if (metricNames[i] == "ROE"):
-            roe = ((roeMod/roe15yr) *  (1/13))
+            roe = ((eqiMult/roeMod)/roe15yr) * (1/13)
             possibilityMatrix.append(roe)
-
+            
+            ## Toomuch
         if (metricNames[i] == "ROA"):
-            roa = ((roaMod/roa15yr) *  (1/13))
+            roa = ((ast15yr/roaMod)/roa15yr) * (1/13)
             possibilityMatrix.append(roa)
-
+            
+            
         if (metricNames[i] == "ROD"):
-            rod = ((rodMod/rod15yr) *  (1/13))
+            rod = ((rodMod/rod15yr)) * (1/13)
             possibilityMatrix.append(rod)
-
+            
+            
         if (metricNames[i] == "ROI"):
-            roi = ((roiMod/roi15yr) *  (1/13))
+            roi = ((roiMod/roi15yr)) * (1/13)
             possibilityMatrix.append(roi)
-
+           
         if (metricNames[i] == "Revenue"):
-            revenue  = ((revenueMod/rev15yr) *  (1/13))
+            revenue  = ((revenueMod/rev15yr)) * (1/13)
             possibilityMatrix.append(revenue)
-
+            
         if (metricNames[i] == "Profit"):
-            profit = ((profitMod/prf15yr) *  (1/13))
+            profit = ((profitMod/prf15yr)) * (1/13)
             possibilityMatrix.append(profit)
-
+            
         if (metricNames[i] == "Equity"):
-            equity = ((equityMod/eqi15yr) *  (1/13))
+            equity = ((equityMod/eqi15yr)) * (1/13)
             possibilityMatrix.append(equity)
-
+            
         if (metricNames[i] == "Assets"):
-            assets = ((assetsMod/ast15yr) *  (1/13))
+            assets = ((assetsMod/ast15yr)) * (1/13)
             possibilityMatrix.append(assets)
-
+            print(assets)
     possibilityMatrices.append(possibilityMatrix)
     oScoreArr.append(math.fsum(possibilityMatrix))
 
