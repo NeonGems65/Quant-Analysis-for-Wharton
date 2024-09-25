@@ -4,6 +4,7 @@ import numpy as np
 import pandas as pd
 import csv
 from io import StringIO
+import os
 
 metricNames =     ['P/E', 'EV/EBITDA', 'P/B', 'P/CF', 'P/S', 'ROE',  'ROA',             "ROD",'ROI',"Revenue", 'Profit', "Equity", "Assets", "D/A", "Ebitda Growth", "CF Growth"]
 # ROE: [(TTM Net Income/ TTM Shareholder Equity) - (15yrPast Net Income/ 15yrPast Shareholder Equity)] / (15yrPast Net Income/ 15yrPast Shareholder Equity)
@@ -12,7 +13,10 @@ metricNames =     ['P/E', 'EV/EBITDA', 'P/B', 'P/CF', 'P/S', 'ROE',  'ROA',     
 
 # ROA: [(TTM Net Income/TTM Total Assets) - (15yrPast Net Income/15yrPast Total Assets)] / (15yrPast Net Income/15yrPast Total Assets)
 
-stockList = ["AEO", "AMZN", "ANF", "APTV", "AZO", "BABA", "BBW", "BBY", "BNED", "BURL", "BWA", "CAAS", "CAKE", "CMG", "CZR", "EDU", "ETSY", "FL", "F", "GM", "GRMN", "GRPN", "HAS", "HD", "HMC", "HOG", "HRB", "H", "KMX", "LCII", "LE", "LOW", "LULU", "LVS", "MAR", "MAT", "MCD", "MOV", "M", "NCLH", "NKE", "ORLY", "PLNT", "PTON", "PZZA", "SBUX", "SFIX", "SONY", "SWBI", "TAL", "TCS", "TJX", "TM", "TSLA", "TXRH", "UA", "ULTA", "URBN", "VFC", "VRA", "WEN", "WH", "WSM", "YUM"]
+consumDiscStockList = ["AEO", "AMZN", "ANF", "APTV", "AZO", "BABA", "BBW", "BBY", "BNED", "BURL", "BWA", "CAAS", "CAKE", "CMG", "CZR", "EDU", "ETSY", "FL", "F", "GM", "GRMN", "GRPN", "HAS", "HD", "HMC", "HOG", "HRB", "H", "KMX", "LCII", "LE", "LOW", "LULU", "LVS", "MAR", "MAT", "MCD", "MOV", "M", "NCLH", "NKE", "ORLY", "PLNT", "PTON", "PZZA", "SBUX", "SFIX", "SONY", "SWBI", "TAL", "TCS", "TJX", "TM", "TSLA", "TXRH", "UA", "ULTA", "URBN", "VFC", "VRA", "WEN", "WH", "WSM", "YUM"]
+healthStockList = ["ABBV", "ABT", "ACAD", "AMGN", "AMN", "BAX", "BMY", "CI", "CNC", "CPRX", "CVS", "DOC", "GILD", "GMAB", "GMED", "GSK", "HBIO", "ILMN", "IQV", "JNJ", "LQDA", "MCK", "MRK", "MYGN", "NVO", "NVS", "PBH", "PFE", "REGN", "TEVA", "UNH", "VEEV"]
+
+stockList = healthStockList
 stock15yrMetrics = []
 
 for m in range(len(stockList)):
@@ -46,7 +50,7 @@ for m in range(len(stockList)):
 
 
     def extract15yrData(k, csv, indexMod):
-        dataVal = 0.0
+        dataVal = 0
         lengthIterated = 0
         for j in range(csv.loc[k].size - 2):
             
@@ -60,14 +64,16 @@ for m in range(len(stockList)):
                 print('nothing will be done')
             else: 
                 dataVal += csv.loc[k][j+2+indexMod]
+        try:
+            dataVal = dataVal / lengthIterated
+        except:
+            dataVal = dataVal / 1
             
-        dataVal = dataVal / lengthIterated
-        
         return dataVal
 
 
     # --------------- Financials CSV ---------------        
-    dfFinancials = pd.read_csv('./Consumer-Discretionary/' + stockList[m] +"_annual_financials.csv")
+    dfFinancials = pd.read_csv('./Healthcare/' + stockList[m] +"_annual_financials.csv")
 
     for i in range(dfFinancials["name"].size):
         
@@ -89,7 +95,7 @@ for m in range(len(stockList)):
 
     # --------------- Balance Sheet CSV ---------------        
 
-    dfBalance = pd.read_csv('./Consumer-Discretionary/' + stockList[m] +"_annual_balance-sheet.csv")
+    dfBalance = pd.read_csv('./Healthcare/' + stockList[m] +"_annual_balance-sheet.csv")
 
     for i in range(dfBalance["name"].size):
         
@@ -109,7 +115,7 @@ for m in range(len(stockList)):
             longDebt15yr = extract15yrData(i, dfBalance, 0)
             
     # --------------- Cash Flow CSV ---------------        
-    with open('./Consumer-Discretionary/' + stockList[m] + '_annual_cash-flow.csv', 'r') as file:
+    with open('./Healthcare/' + stockList[m] + '_annual_cash-flow.csv', 'r') as file:
         csv_content = file.read()
 
     # Replace non-breaking spaces with regular spaces
@@ -124,7 +130,7 @@ for m in range(len(stockList)):
             capex15yr = extract15yrData(i, dfCashFlow, 0)
 
     # --------------- Share Price CSV ---------------
-    dfSharePrice = pd.read_csv('./Consumer-Discretionary/' + stockList[m] +"_historical_stock_prices.csv")
+    dfSharePrice = pd.read_csv('./Healthcare/' + stockList[m] +".csv")
     len = dfSharePrice.shape[0]
 
     for i in range(len):
@@ -157,7 +163,7 @@ for m in range(len(stockList)):
     ast15yr = 0
 
     # --------------- Valuation CSV ---------------        
-    dfValuation = pd.read_csv('./Consumer-Discretionary/' + stockList[m] +"_annual_valuation_measures.csv")
+    dfValuation = pd.read_csv('./Healthcare/' + stockList[m] +"_annual_valuation_measures.csv")
 
     for i in range(dfValuation["name"].size):
         
@@ -186,8 +192,11 @@ for m in range(len(stockList)):
 
     roe15yr = netIncm15yr / shEq15yr
     roa15yr = netIncm15yr / totAssets15yr
-
-    rod15yr = netIncm15yr / longDebt15yr
+    
+    try:
+        rod15yr = netIncm15yr / longDebt15yr
+    except ZeroDivisionError:
+        rod15yr = netIncm15yr / 1
     roi15yr = netIncm15yr / capex15yr
 
 
@@ -202,8 +211,12 @@ for m in range(len(stockList)):
     assetsGrowth15yr = (totAssetsTTM - totAssets15yr) / totAssets15yr
 
     debtToAssets = (longDebt15yr/totAssets15yr)
+ 
+    try:
+        ebitdaGrowth15yr = (evEbitdaTTM - evEbtida15yr) / evEbtida15yr
+    except ZeroDivisionError:
+        ebitdaGrowth15yr = 0
 
-    ebitdaGrowth15yr = (evEbitdaTTM - evEbtida15yr) / evEbtida15yr
     cfGrowth15yr = (ocfTTM - ocf15yr) / ocf15yr
     
     metrics = [pe15yr, evEbtida15yr, pb15yr, pcf15yr, ps15yr, roe15yr, roa15yr, rod15yr, roi15yr, revenueGrowth15yr, profitGrowth15yr, equityGrowth15yr, assetsGrowth15yr, debtToAssets, ebitdaGrowth15yr, cfGrowth15yr ]
