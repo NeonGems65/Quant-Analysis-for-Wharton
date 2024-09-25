@@ -161,69 +161,56 @@ for i in range(numPossibilities):
     for  i in range(len(baseMetricVals)):
         
         if (metricNames[i] == "P/E"):
-            pe = pe15yr / peMod
-            pe = ((pe15yr/pe) * (1/13))
+            pe = ((pe15yr/peMod) * (1/13))
             possibilityMatrix.append(pe)
 
 
         if (metricNames[i] == "EV/EBITDA"):
-            evEbitda = evEbtida15yr / evEbitdaMod
-            evEbitda = ((evEbtida15yr/evEbitda) * (1/13))
+            evEbitda = ((evEbtida15yr/evEbitdaMod) * (1/13))
             possibilityMatrix.append(evEbitda)
 
         if (metricNames[i] == "P/B"):
-            pb = pb15yr / pbMod
-            pb = ((pb15yr/pb) * (1/13))
+            pb = ((pb15yr/pbMod) * (1/13))
             possibilityMatrix.append(pb)
 
         if (metricNames[i] == "P/CF"):
-            pcf = pcf15yr / pcfMod
-            pcf = ((pcf15yr/pcf) * (1/13))
+            pcf = ((pcf15yr/pcfMod) * (1/13))
             possibilityMatrix.append(pcf)
 
         if (metricNames[i] == "P/S"):
-            ps = ps15yr / psMod
-            ps = ((ps15yr/ps) * (1/13))
+            ps = ((ps15yr/psMod) * (1/13))
             possibilityMatrix.append(ps)
 
         if (metricNames[i] == "ROE"):
-            roe = roeMod / roe15yr
-            roe = ((roe/roe15yr) *  (1/13))
+            roe = ((roeMod/roe15yr) *  (1/13))
             possibilityMatrix.append(roe)
 
         if (metricNames[i] == "ROA"):
-            roa = roaMod / roa15yr
-            roa = ((roa/roa15yr) *  (1/13))
+            roa = ((roaMod/roa15yr) *  (1/13))
             possibilityMatrix.append(roa)
 
         if (metricNames[i] == "ROD"):
-            rod = rodMod / rod15yr
-            rod = ((rod/rod15yr) *  (1/13))
+            rod = ((rodMod/rod15yr) *  (1/13))
             possibilityMatrix.append(rod)
 
         if (metricNames[i] == "ROI"):
-            roi = roiMod / roi15yr
-            roi = ((roi/roi15yr) *  (1/13))
+            roi = ((roiMod/roi15yr) *  (1/13))
             possibilityMatrix.append(roi)
 
         if (metricNames[i] == "Revenue"):
-            revenue = revenueMod / rev15yr
-            revenue  = ((revenue/rev15yr) *  (1/13))
+            revenue  = ((revenueMod/rev15yr) *  (1/13))
             possibilityMatrix.append(revenue)
 
         if (metricNames[i] == "Profit"):
-            profit = profitMod / prf15yr
-            profit = ((profit/prf15yr) *  (1/13))
+            profit = ((profitMod/prf15yr) *  (1/13))
             possibilityMatrix.append(profit)
 
         if (metricNames[i] == "Equity"):
-            equity = equityMod / eqi15yr
-            equity = ((equity/eqi15yr) *  (1/13))
+            equity = ((equityMod/eqi15yr) *  (1/13))
             possibilityMatrix.append(equity)
 
         if (metricNames[i] == "Assets"):
-            assets = assetsMod / ast15yr
-            assets = ((assets/ast15yr) *  (1/13))
+            assets = ((assetsMod/ast15yr) *  (1/13))
             possibilityMatrix.append(assets)
 
     possibilityMatrices.append(possibilityMatrix)
