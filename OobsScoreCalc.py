@@ -13,28 +13,26 @@ metricNames =     ['P/E', 'EV/EBITDA', 'P/B', 'P/CF', 'P/S', 'ROE',  'ROA',     
 
 
 
-baseMetricVals = [  0.54,  0.46,        0.63 , 0.56,   0.88,  150.00, 48.85,            1, 1, 1,      1,   1,      1, ]
 possibilityMatrices = []
 oScoreArr = []
-pe15yr = 33.402
-evEbtida15yr = 15.078
-pb15yr = 9.0278
-pcf15yr = 30.2425
-ps15yr = 5.295
-roe15yr = 0.1903
-roa15yr = 0.0806
-rod15yr = 0.2828
-roi15yr = -3.264
-rev15yr = 0.748
-prf15yr = 0.8509
-eqi15yr = 0.7689
-ast15yr= 0.8548
-ebitdaGrowth = 0.299
-cfGrowth = 0.948
-eqiMult = 2.148
+pe15yr = 18.078
+evEbtida15yr = 12.593
+pb15yr = 1.776
+pcf15yr = 9.701
+ps15yr = 2.605
+roe15yr = 0.110
+roa15yr = 0.013
+rod15yr = 0.094
+roi15yr = -8.423
+rev15yr = 0.4176
+prf15yr = 0.4112
+eqi15yr = 0.2842
+ast15yr= 0.475
+ebitdaGrowth = 0.101
+cfGrowth = 0.156
 
 
-numPossibilities = 10 
+numPossibilities = 5
 for i in range(numPossibilities):
     print(i)
     total = 0.0
@@ -163,12 +161,13 @@ for i in range(numPossibilities):
             
 
     possibilityMatrix = []
-    for  i in range(len(baseMetricVals)):
+    for  i in range(len(metricNames)):
         
+
         if (metricNames[i] == "P/E"):
             pe = ((pe15yr/(prf15yr/peMod))) * (1/13)
             possibilityMatrix.append(pe)
-        
+            print(pe)
 
         if (metricNames[i] == "EV/EBITDA"):
             evEbitda = ((evEbtida15yr/(ebitdaGrowth/evEbitdaMod))) * (1/13)
@@ -188,12 +187,12 @@ for i in range(numPossibilities):
             possibilityMatrix.append(ps)
             ## Toomuch
         if (metricNames[i] == "ROE"):
-            roe = ((eqiMult/roeMod)/roe15yr) * (1/13)
+            roe = ((roeMod/roe15yr)) * (1/13)
             possibilityMatrix.append(roe)
             
             ## Toomuch
         if (metricNames[i] == "ROA"):
-            roa = ((ast15yr/roaMod)/roa15yr) * (1/13)
+            roa = ((roaMod/roa15yr)) * (1/13)
             possibilityMatrix.append(roa)
             
             
@@ -205,7 +204,7 @@ for i in range(numPossibilities):
         if (metricNames[i] == "ROI"):
             roi = ((roiMod/roi15yr)) * (1/13)
             possibilityMatrix.append(roi)
-           
+            
         if (metricNames[i] == "Revenue"):
             revenue  = ((revenueMod/rev15yr)) * (1/13)
             possibilityMatrix.append(revenue)
@@ -221,7 +220,7 @@ for i in range(numPossibilities):
         if (metricNames[i] == "Assets"):
             assets = ((assetsMod/ast15yr)) * (1/13)
             possibilityMatrix.append(assets)
-            print(assets)
+            
     possibilityMatrices.append(possibilityMatrix)
     oScoreArr.append(math.fsum(possibilityMatrix))
 
