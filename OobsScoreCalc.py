@@ -11,10 +11,9 @@ metricNames =     ['P/E', 'EV/EBITDA', 'P/B', 'P/CF', 'P/S', 'ROE',  'ROA',     
 
 # ROA: [(TTM Net Income/TTM Total Assets) - (15yrPast Net Income/15yrPast Total Assets)] / (15yrPast Net Income/15yrPast Total Assets)
 
-df = pd.read_csv("Consumer Discretionary Sector Metrics.csv")
+df = pd.read_csv("Information Technology Sector Metrics.csv")
 
-print(df.loc[df["Stock"].size - 3]["Stock"])
-sectorMedianIndex = df["Stock"].size - 3
+sectorMedianIndex = df["Stock"].size - 2
 
 possibilityMatrices = []
 oScoreArr = []
@@ -32,10 +31,14 @@ prf15yr = df.loc[sectorMedianIndex]["Profit"]
 eqi15yr = df.loc[sectorMedianIndex]["Equity"]
 ast15yr= df.loc[sectorMedianIndex]["Assets"]
 ebitdaGrowth = df.loc[sectorMedianIndex]["Ebitda Growth"]
-cfGrowth = df.loc[sectorMedianIndex]["Cf Growth"]
+cfGrowth = df.loc[sectorMedianIndex]["CF Growth"]
 
+# print("MEdian vals")
+# print(pe15yr)
+# print(roa15yr)
+# print(cfGrowth)
 
-numPossibilities = 5
+numPossibilities = 6
 for i in range(numPossibilities):
     print(i)
     total = 0.0
@@ -167,62 +170,67 @@ for i in range(numPossibilities):
     for  i in range(len(metricNames)):
         
 
-        if (metricNames[i] == "P/E"):
-            pe = ((pe15yr/(prf15yr/peMod))) * (1/13)
-            possibilityMatrix.append(pe)
-            print(pe)
+        ## Low = better
+            if (metricNames[i] == "P/E"):
+                pe = (((prf15yr/peMod)/pe15yr)) * (1/13)
+                possibilityMatrix.append(pe)
+                print(peMod)
+                print(pe)
 
-        if (metricNames[i] == "EV/EBITDA"):
-            evEbitda = ((evEbtida15yr/(ebitdaGrowth/evEbitdaMod))) * (1/13)
-            possibilityMatrix.append(evEbitda)
+            ## Low = better
+            if (metricNames[i] == "EV/EBITDA"):
+                evEbitda = (((ebitdaGrowth/evEbitdaMod)/evEbtida15yr)) * (1/13)
+                possibilityMatrix.append(evEbitda)
+                
+            ## Low = better
+            if (metricNames[i] == "P/B"):
+                pb = (((roe15yr*eqi15yr)/pbMod)/(pb15yr)) * (1/13)
+                possibilityMatrix.append(pb)
             
-        
-        if (metricNames[i] == "P/B"):
-            pb = (pb15yr) / ((roe15yr*eqi15yr)/pbMod) * (1/13)
-            possibilityMatrix.append(pb)
+            ## Low = better
+            if (metricNames[i] == "P/CF"):
+                pcf = ((cfGrowth/pcfMod)/pcf15yr) * (1/13)
+                possibilityMatrix.append(pcf)
             
-        if (metricNames[i] == "P/CF"):
-            pcf = (pcf15yr/(cfGrowth/pcfMod)) * (1/13)
-            possibilityMatrix.append(pcf)
-            
-        if (metricNames[i] == "P/S"):
-            ps = ((ps15yr/(rev15yr/psMod))) * (1/13)
-            possibilityMatrix.append(ps)
-            ## Toomuch
-        if (metricNames[i] == "ROE"):
-            roe = ((roeMod/roe15yr)) * (1/13)
-            possibilityMatrix.append(roe)
-            
-            ## Toomuch
-        if (metricNames[i] == "ROA"):
-            roa = ((roaMod/roa15yr)) * (1/13)
-            possibilityMatrix.append(roa)
-            
-            
-        if (metricNames[i] == "ROD"):
-            rod = ((rodMod/rod15yr)) * (1/13)
-            possibilityMatrix.append(rod)
-            
-            
-        if (metricNames[i] == "ROI"):
-            roi = ((roiMod/roi15yr)) * (1/13)
-            possibilityMatrix.append(roi)
-            
-        if (metricNames[i] == "Revenue"):
-            revenue  = ((revenueMod/rev15yr)) * (1/13)
-            possibilityMatrix.append(revenue)
-            
-        if (metricNames[i] == "Profit"):
-            profit = ((profitMod/prf15yr)) * (1/13)
-            possibilityMatrix.append(profit)
-            
-        if (metricNames[i] == "Equity"):
-            equity = ((equityMod/eqi15yr)) * (1/13)
-            possibilityMatrix.append(equity)
-            
-        if (metricNames[i] == "Assets"):
-            assets = ((assetsMod/ast15yr)) * (1/13)
-            possibilityMatrix.append(assets)
+            ## Low = better
+            if (metricNames[i] == "P/S"):
+                ps = ((rev15yr/psMod)/ps15yr) * (1/13)
+                possibilityMatrix.append(ps)
+                
+            if (metricNames[i] == "ROE"):
+                roe = (roe15yr/roeMod) * (1/13)
+                possibilityMatrix.append(roe)
+                
+                
+            if (metricNames[i] == "ROA"):
+                roa = (roa15yr/roaMod) * (1/13)
+                possibilityMatrix.append(roa)
+                
+                
+            if (metricNames[i] == "ROD"):
+                rod = (rod15yr/rodMod) * (1/13)
+                possibilityMatrix.append(rod)
+                
+                
+            if (metricNames[i] == "ROI"):
+                roi = (roi15yr/roiMod) * (1/13)
+                possibilityMatrix.append(roi)
+                
+            if (metricNames[i] == "Revenue"):
+                revenue  = ((rev15yr/revenueMod)) * (1/13)
+                possibilityMatrix.append(revenue)
+                
+            if (metricNames[i] == "Profit"):
+                profit = ((prf15yr/profitMod)) * (1/13)
+                possibilityMatrix.append(profit)
+                
+            if (metricNames[i] == "Equity"):
+                equity = ((eqi15yr/equityMod)) * (1/13)
+                possibilityMatrix.append(equity)
+                
+            if (metricNames[i] == "Assets"):
+                assets = ((ast15yr/assetsMod)) * (1/13)
+                possibilityMatrix.append(assets)
             
     possibilityMatrices.append(possibilityMatrix)
     oScoreArr.append(math.fsum(possibilityMatrix))
