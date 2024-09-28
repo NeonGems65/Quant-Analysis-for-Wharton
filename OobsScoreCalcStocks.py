@@ -11,7 +11,7 @@ metricNames =     ['P/E', 'EV/EBITDA', 'P/B', 'P/CF', 'P/S', 'ROE',  'ROA',     
 
 # ROA: [(TTM Net Income/TTM Total Assets) - (15yrPast Net Income/15yrPast Total Assets)] / (15yrPast Net Income/15yrPast Total Assets)
 
-df = pd.read_csv("Consumer Discretionary Sector Metrics.csv")
+df = pd.read_csv("Financial Sector Metrics.csv")
 
 sectorMedianIndex = df["Stock"].size - 3
 
@@ -176,63 +176,61 @@ for h in range(df["Stock"].size-3):
 
             ## Low = better
             if (metricNames[i] == "P/E"):
-                pe = (((prf15yr/peMod)/pe15yr)) * (1/13)
+                pe = (prf15yr/pe15yr) * peMod
                 possibilityMatrix.append(pe)
-                print(pe)
 
             ## Low = better
             if (metricNames[i] == "EV/EBITDA"):
-                evEbitda = (((ebitdaGrowth/evEbitdaMod)/evEbtida15yr)) * (1/13)
+                evEbitda = (ebitdaGrowth/evEbtida15yr) * evEbitdaMod
                 possibilityMatrix.append(evEbitda)
                 
             ## Low = better
             if (metricNames[i] == "P/B"):
-                pb = (((roe15yr*eqi15yr)/pbMod)/(pb15yr)) * (1/13)
+                pb = ((roe15yr*eqi15yr)/(pb15yr)) * pbMod
                 possibilityMatrix.append(pb)
             
             ## Low = better
             if (metricNames[i] == "P/CF"):
-                pcf = ((cfGrowth/pcfMod)/pcf15yr) * (1/13)
+                pcf = (cfGrowth/pcf15yr) * pcfMod
                 possibilityMatrix.append(pcf)
             
             ## Low = better
             if (metricNames[i] == "P/S"):
-                ps = ((rev15yr/psMod)/ps15yr) * (1/13)
+                ps = (rev15yr/ps15yr) * pcfMod
                 possibilityMatrix.append(ps)
                 
             if (metricNames[i] == "ROE"):
-                roe = (roe15yr/roeMod) * (1/13)
+                roe = (roe15yr) * roeMod
                 possibilityMatrix.append(roe)
                 
-                
             if (metricNames[i] == "ROA"):
-                roa = (roa15yr/roaMod) * (1/13)
+                roa = (roa15yr) * roaMod
                 possibilityMatrix.append(roa)
                 
                 
             if (metricNames[i] == "ROD"):
-                rod = (rod15yr/rodMod) * (1/13)
+                rod = (rod15yr) * rodMod
                 possibilityMatrix.append(rod)
                 
                 
             if (metricNames[i] == "ROI"):
-                roi = (roi15yr/roiMod) * (1/13)
+                roi = (roi15yr) * roiMod
                 possibilityMatrix.append(roi)
                 
             if (metricNames[i] == "Revenue"):
-                revenue  = ((rev15yr/revenueMod)) * (1/13)
+                revenue  = (rev15yr) * revenueMod
                 possibilityMatrix.append(revenue)
                 
             if (metricNames[i] == "Profit"):
-                profit = ((prf15yr/profitMod)) * (1/13)
+                profit = (prf15yr) * profitMod
                 possibilityMatrix.append(profit)
                 
             if (metricNames[i] == "Equity"):
-                equity = ((eqi15yr/equityMod)) * (1/13)
+                equity = (eqi15yr) * equityMod
                 possibilityMatrix.append(equity)
                 
             if (metricNames[i] == "Assets"):
-                assets = ((ast15yr/assetsMod)) * (1/13)
+                assets = (ast15yr) * assetsMod
                 possibilityMatrix.append(assets)
                 
         possibilityMatrices.append(possibilityMatrix)
@@ -247,7 +245,7 @@ for h in range(df["Stock"].size-3):
     
 
 
-with open('O-Scores.csv', 'w', newline="") as f:
+with open('Stock-O-Scores.csv', 'w', newline="") as f:
     csvWriter = csv.writer(f)
     
     for i in range(len(allStockOScores)):
