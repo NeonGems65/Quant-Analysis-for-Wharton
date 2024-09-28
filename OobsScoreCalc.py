@@ -11,25 +11,28 @@ metricNames =     ['P/E', 'EV/EBITDA', 'P/B', 'P/CF', 'P/S', 'ROE',  'ROA',     
 
 # ROA: [(TTM Net Income/TTM Total Assets) - (15yrPast Net Income/15yrPast Total Assets)] / (15yrPast Net Income/15yrPast Total Assets)
 
+df = pd.read_csv("Consumer Discretionary Sector Metrics.csv")
 
+print(df.loc[df["Stock"].size - 3]["Stock"])
+sectorMedianIndex = df["Stock"].size - 3
 
 possibilityMatrices = []
 oScoreArr = []
-pe15yr = 18.078
-evEbtida15yr = 12.593
-pb15yr = 1.776
-pcf15yr = 9.701
-ps15yr = 2.605
-roe15yr = 0.110
-roa15yr = 0.013
-rod15yr = 0.094
-roi15yr = -8.423
-rev15yr = 0.4176
-prf15yr = 0.4112
-eqi15yr = 0.2842
-ast15yr= 0.475
-ebitdaGrowth = 0.101
-cfGrowth = 0.156
+pe15yr = df.loc[sectorMedianIndex]["P/E"]
+evEbtida15yr = df.loc[sectorMedianIndex]["EV/EBITDA"]
+pb15yr = df.loc[sectorMedianIndex]["P/B"]
+pcf15yr = df.loc[sectorMedianIndex]["P/CF"]
+ps15yr = df.loc[sectorMedianIndex]["P/S"]
+roe15yr = df.loc[sectorMedianIndex]["ROE"]
+roa15yr = df.loc[sectorMedianIndex]["ROA"]
+rod15yr = df.loc[sectorMedianIndex]["ROD"]
+roi15yr = df.loc[sectorMedianIndex]["ROI"]
+rev15yr = df.loc[sectorMedianIndex]["Revenue"]
+prf15yr = df.loc[sectorMedianIndex]["Profit"]
+eqi15yr = df.loc[sectorMedianIndex]["Equity"]
+ast15yr= df.loc[sectorMedianIndex]["Assets"]
+ebitdaGrowth = df.loc[sectorMedianIndex]["Ebitda Growth"]
+cfGrowth = df.loc[sectorMedianIndex]["Cf Growth"]
 
 
 numPossibilities = 5
