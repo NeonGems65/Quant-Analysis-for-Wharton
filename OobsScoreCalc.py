@@ -4,21 +4,21 @@ import numpy as np
 import pandas as pd
 import csv
 
-metricNames =     ['P/E', 'EV/EBITDA', 'P/B', 'P/CF', 'P/S', 'ROE',  'ROA',             "ROD",'ROI',"Revenue", 'Profit', "Equity", "Assets"]
+metricNames =     ['P/E', 'P/B', 'P/CF', 'P/S', 'ROE',  'ROA',             "ROD",'ROI',"Revenue", 'Profit', "Equity", "Assets"]
 # ROE: [(TTM Net Income/ TTM Shareholder Equity) - (15yrPast Net Income/ 15yrPast Shareholder Equity)] / (15yrPast Net Income/ 15yrPast Shareholder Equity)
     # OCF Per Share: TTM-OCF/Shares-Outstanding
 # P/CF: Share-Price (30 day avg) / OCF Per Share **If Share Price not available, another formula: https://www.investopedia.com/terms/p/price-to-cash-flowratio.asp
 
 # ROA: [(TTM Net Income/TTM Total Assets) - (15yrPast Net Income/15yrPast Total Assets)] / (15yrPast Net Income/15yrPast Total Assets)
 
-df = pd.read_csv("Consumer Discretionary Sector Metrics.csv")
+df = pd.read_csv("Financial Sector Metrics.csv")
 
 sectorMedianIndex = df["Stock"].size - 2
 
 possibilityMatrices = []
 oScoreArr = []
 pe15yr = df.loc[sectorMedianIndex]["P/E"]
-evEbtida15yr = df.loc[sectorMedianIndex]["EV/EBITDA"]
+# evEbtida15yr = df.loc[sectorMedianIndex]["EV/EBITDA"]
 pb15yr = df.loc[sectorMedianIndex]["P/B"]
 pcf15yr = df.loc[sectorMedianIndex]["P/CF"]
 ps15yr = df.loc[sectorMedianIndex]["P/S"]
@@ -47,7 +47,7 @@ for i in range(numPossibilities):
     amnt = .38
     
     peMod = 0.000001
-    evEbitdaMod = 0.000001
+    # evEbitdaMod = 0.000001
     pbMod = 0.000001
     pcfMod = 0.000001
     psMod = 0.000001
@@ -163,7 +163,7 @@ for i in range(numPossibilities):
         # print(total)
 
         if 0.375 <= total <= .38:
-            metricNames =  ['P/E', 'EV/EBITDA', 'P/B', 'P/CF', 'P/S', 'ROE',  'ROA',             "ROD",'ROI',"Revenue", 'Profit', "Equity", "Assets"]
+            metricNames =  ['P/E', 'P/B', 'P/CF', 'P/S', 'ROE',  'ROA',             "ROD",'ROI',"Revenue", 'Profit', "Equity", "Assets"]
             break
             
             
@@ -192,10 +192,10 @@ for i in range(numPossibilities):
                 possibilityMatrix.append(pe)
                 # print(pe)
             ## Low = better
-            if (metricNames[i] == "EV/EBITDA"):
-                evEbitda = (ebitdaGrowth/evEbtida15yr) * evEbitdaMod
-                possibilityMatrix.append(evEbitda)
-                # print(evEbitda)
+            # if (metricNames[i] == "EV/EBITDA"):
+            #     evEbitda = (ebitdaGrowth/evEbtida15yr) * evEbitdaMod
+            #     possibilityMatrix.append(evEbitda)
+            #     # print(evEbitda)
             ## Low = better
             if (metricNames[i] == "P/B"):
                 pb = ((roe15yr*eqi15yr)/(pb15yr)) * pbMod
@@ -225,7 +225,7 @@ for i in range(numPossibilities):
                 possibilityMatrix.append(rod)
                 # print(rod)
             if (metricNames[i] == "ROI"):
-                roi = (roi15yr) * roiMod
+                roi = (roi15yr) * roiMod * -1
                 possibilityMatrix.append(roi)
                 # print(roi)
             if (metricNames[i] == "Revenue"):

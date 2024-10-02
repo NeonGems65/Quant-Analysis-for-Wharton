@@ -11,7 +11,7 @@ metricNames =     ['P/E', 'EV/EBITDA', 'P/B', 'P/CF', 'P/S', 'ROE',  'ROA',     
 
 # ROA: [(TTM Net Income/TTM Total Assets) - (15yrPast Net Income/15yrPast Total Assets)] / (15yrPast Net Income/15yrPast Total Assets)
 
-df = pd.read_csv("Financial Sector Metrics.csv")
+df = pd.read_csv("Healthcare Sector Metrics.csv")
 
 sectorMedianIndex = df["Stock"].size - 3
 
@@ -214,7 +214,7 @@ for h in range(df["Stock"].size-3):
                 
                 
             if (metricNames[i] == "ROI"):
-                roi = (roi15yr) * roiMod
+                roi = (roi15yr) * roiMod * -1
                 possibilityMatrix.append(roi)
                 
             if (metricNames[i] == "Revenue"):
