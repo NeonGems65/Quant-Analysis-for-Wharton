@@ -41,13 +41,15 @@ for h in range(df["Stock"].size-3):
     ebitdaGrowth = df.loc[h]["Ebitda Growth"]
     cfGrowth = df.loc[h]["CF Growth"]
     
+    allTimesRan = []
+    
     numPossibilities = 1000
 
     for i in range(numPossibilities):
         print(i)
         total = 0.0
         amnt = .38
-        
+        timesRan = 0
         peMod = 0.000001
         evEbitdaMod = 0.000001
         pbMod = 0.000001
@@ -63,7 +65,6 @@ for h in range(df["Stock"].size-3):
         assetsMod = 0.000001
         
         while True:
-            
             min = 0.001
             # print(len(metricNames)-1)
 
@@ -163,8 +164,10 @@ for h in range(df["Stock"].size-3):
             
             metricNames.pop(index)
             # print(total)
-
+            timesRan += 1 
+            # print(timesRan)
             if 0.375 <= total <= .38:
+                allTimesRan.append(timesRan)
                 metricNames =  ['P/E', 'EV/EBITDA', 'P/B', 'P/CF', 'P/S', 'ROE',  'ROA',             "ROD",'ROI',"Revenue", 'Profit', "Equity", "Assets"]
                 break
                 
@@ -242,8 +245,7 @@ for h in range(df["Stock"].size-3):
     possibilityMatrices = []
 
 
-    
-
+print(np.mean(allTimesRan))
 
 with open('Stock-O-Scores.csv', 'w', newline="") as f:
     csvWriter = csv.writer(f)

@@ -14,8 +14,7 @@ def getObj(url):
     obj = json.loads(string)
     return obj
 
-objAAPL = getObj("https://www.alphavantage.co/query?function=NEWS_SENTIMENT&tickers=AMN&limit=100000000000000000&time_from=20090101T0130&apikey=0K6Z1IRED41VX9RS")
-
+objAAPL = getObj("https://www.alphavantage.co/query?function=NEWS_SENTIMENT&tickers=AVGO&limit=100000000000000000&time_from=20241001T0130&apikey=0K6Z1IRED41VX9RS")
 i = 0
 tickerList = []
 for item in objAAPL["feed"]:
@@ -45,18 +44,21 @@ def findSentAvg(tickerSymbol):
                 j += 1
 
     sentScoreAvg /= j
-    return sentScoreAvg
+    return sentScoreAvg,j
 
 sentScoreList = []
+ratingsFound = []
 for ticker in tickerList:
     print(ticker)
-    print(findSentAvg(ticker))
-    sentScoreList.append(findSentAvg(ticker))
+    sentScoreAvg, j = findSentAvg(ticker)
+    print(sentScoreAvg)
+    sentScoreList.append(sentScoreAvg)
+    ratingsFound.append(j)
 
 # Iterate through the JSON array 
 print(sentScoreList)
 with open('SentimentScore.csv', 'w', newline="") as f:
     csvWriter = csv.writer(f)
     for i in range(len(tickerList)):
-        csvWriter.writerow([tickerList[i]] + [sentScoreList[i]])   
+        csvWriter.writerow([tickerList[i]] + [sentScoreList[i]] + [ratingsFound[i]])   
 
