@@ -14,7 +14,7 @@ def getObj(url):
     obj = json.loads(string)
     return obj
 
-objAAPL = getObj("https://www.alphavantage.co/query?function=NEWS_SENTIMENT&tickers=ASML&limit=1000&time_from=20231001T0130&apikey=0K6Z1IRED41VX9RS")
+objAAPL = getObj("https://www.alphavantage.co/query?function=NEWS_SENTIMENT&tickers=ORIS&limit=1000&time_from=20241204T0130&apikey=0K6Z1IRED41VX9RS")
 i = 0
 tickerList = []
 for item in objAAPL["feed"]:
