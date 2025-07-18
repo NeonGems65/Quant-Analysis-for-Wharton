@@ -27,11 +27,12 @@ endDate1 = "20241201T0130"
 startDate2 = "20250104T0130"
 
 # List of tickers that will be analyzed
-listOfTickers = ["CZR", "SONY", "TSLA", "LAZ", "MS", "UBS", "ILMN", "IQV", "ASML", "MSFT", "NOW", "NVDA"]
+listOfTickers = ["SPY"]
+#listOfTickers = ["CZR", "SONY", "TSLA", "LAZ", "MS", "UBS", "ILMN", "IQV", "ASML", "MSFT", "NOW", "NVDA"]
     # listOfTickers = ["NVDA", "ORIS"]
     # listOfTickers = ["VCR","VFH","SMH","VGT","QQQ","SCHD","SPY","VONG"]
 
-txtfile.write("https://www.alphavantage.co/query?function=NEWS_SENTIMENT&tickers=" + "NVDA" + "&limit=1000&time_from=" + startDate1 + "&time_to=" + endDate1 + "&apikey=" + apiKey)
+#txtfile.write("https://www.alphavantage.co/query?function=NEWS_SENTIMENT&tickers=" + "NVDA" + "&limit=1000&time_from=" + startDate1 + "&time_to=" + endDate1 + "&apikey=" + apiKey)
 def generateCsvs(selectedTicker):
     
     
